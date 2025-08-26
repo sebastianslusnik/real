@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="utf-8">
-	<title>Realty • Találd meg következő otthonod</title>
+	<title>KomplexIngatlan • Találd meg új otthonod</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -46,9 +46,9 @@
 	}
 
 	.container {
-		max-width: 1200px;
+		max-width: 1300px;
 		margin: 0 auto;
-		padding: 0 24px
+		padding: 0 20px
 	}
 
 	.header {
@@ -167,7 +167,7 @@
 
 	.hero {
 		position: relative;
-		min-height: 92vh;
+		min-height: 100vh;
 		display: flex;
 		align-items: center;
 		overflow: hidden;
@@ -180,7 +180,7 @@
 
 	.hero .inner {
 		display: grid;
-		grid-template-columns: 1.2fr .8fr;
+		grid-template-columns: 1.2fr .9fr;
 		gap: 20px;
 		align-items: center
 	}
@@ -281,7 +281,7 @@
 
 	.hero-title {
 		font-weight: 700;
-		margin: 0 0 4px
+		margin: 0 0 10px
 	}
 
 	.hero-specs {
@@ -514,7 +514,7 @@
 
 	.modal-card {
 		width: 95vw;
-		max-width: 980px;
+		max-width: 1200px;
 		max-height: 90vh;
 		background: #fff;
 		border-radius: 18px;
@@ -527,7 +527,7 @@
 	@media(max-width:900px) {
 		.modal-card {
 			grid-template-columns: 1fr;
-			max-height: 96vh
+			max-height: 90vh
 		}
 	}
 
@@ -542,25 +542,25 @@
 	}
 
 	.modal-body {
-		padding: 16px;
+		padding: 32px;
 		overflow: auto
 	}
 
 	.modal-title {
-		margin: 0 0 6px;
+		margin: 0 0 8px;
 		font-size: 22px;
 		font-weight: 800
 	}
 
 	.modal-addr {
 		color: #64748b;
-		margin-bottom: 6px
+		margin-bottom: 10px
 	}
 
 	.modal-price {
 		font-size: 20px;
 		font-weight: 800;
-		margin-bottom: 10px;
+		margin-bottom: 30px;
 		color: #0f172a
 	}
 
@@ -568,7 +568,7 @@
 		display: flex;
 		gap: 8px;
 		flex-wrap: wrap;
-		margin-bottom: 10px
+		margin-bottom: 30px
 	}
 
 	.modal-chips span {
@@ -590,7 +590,7 @@
 		display: flex;
 		gap: 12px;
 		align-items: center;
-		margin-top: 16px;
+		margin-top: 32px;
 		padding: 12px;
 		border: 1px solid var(--border);
 		border-radius: 14px;
@@ -667,7 +667,7 @@
 		border: 1px solid var(--border);
 		border-radius: 16px;
 		box-shadow: var(--shadow);
-		padding: 16px;
+		padding: 42px;
 		height: 100%;
 		display: flex;
 		flex-direction: column;
@@ -687,11 +687,13 @@
 		background: #fff7ed;
 		border: 1px solid #fed7aa;
 		display: grid;
-		place-items: center
+		place-items: center;
+		margin-top: 20px;
 	}
 
 	.contactText strong {
-		display: block
+		display: block;
+		margin-top: 20px;
 	}
 
 	.business {
@@ -766,13 +768,14 @@
 		<div class="container header-inner">
 			<div class="brand">
 				<div class="logo"></div>
-				<h1>Realty</h1>
+				<h1>KomplexIngatlan.com</h1>
 			</div>
 			<nav class="nav">
-				<a id="navBrowse" href="#listings">Böngészés</a>
-				<a id="navMap" href="#mapSection">Térkép</a>
-				<a id="navAbout" href="#about">Rólunk</a>
-				<a id="navCTA" class="cta" href="new.html">Hirdesse meg</a>
+        <div class="hidden">
+  				<a id="navBrowse" href="#listings">Böngészés</a>
+  				<a id="navMap" href="#mapSection">Térkép</a>
+  				<a id="navAbout" href="#about">Rólunk</a>
+        </div>
 				<div class="switchers">
 					<div class="dd" id="ddLang">
 						<div class="dd-btn" id="langBtn"><span class="flag" id="langFlag">🇭🇺</span><span id="langLabel">Magyar</span></div>
@@ -789,12 +792,13 @@
 						</div>
 					</div>
 				</div>
+				<a id="navCTA" class="cta" href="new.html">Hirdessél nálunk!</a>
 			</nav>
 		</div>
 	</header>
 	<section class="hero">
 		<div class="container inner">
-			<div>
+			<div align="center">
 				<h2 class="headline" id="heroHeadline">Találd meg új otthonod</h2>
 				<p class="sub" id="heroSub">Válogatott ingatlanok egy helyen. Keress, szűrj és fedezd fel a lehetőségeket.</p>
 				<div class="searchbar">
@@ -802,7 +806,7 @@
 					<select id="heroType">
 						<option value="">Bármilyen típus</option>
 						<option>House</option>
-						<option>Apartment</option>
+						<option>Lakás</option>
 						<option>Condo</option>
 						<option>Townhouse</option>
 						<option>Land</option>
@@ -822,7 +826,7 @@
 				<div class="hero-card">
 					<div class="hero-media"></div>
 					<div class="hero-body">
-						<div class="hero-title" id="heroTeaserTitle">Napfényes modern otthon</div>
+						<div class="hero-title" id="heroTeaserTitle">Napfényes modern családi ház Mosonmagyaróváron</div>
 						<div class="hero-specs">
 							<span id="heroTeaserBeds">3 háló</span><span id="heroTeaserBaths">2 fürdő</span><span id="heroTeaserArea">172 m²</span><span class="pill" id="heroTeaserPrice">139 000 000 Ft</span>
 						</div>
@@ -837,7 +841,7 @@
 			<select id="filterType">
 				<option value="">Összes típus</option>
 				<option>House</option>
-				<option>Apartment</option>
+				<option>Lakás</option>
 				<option>Condo</option>
 				<option>Townhouse</option>
 				<option>Land</option>
@@ -912,7 +916,7 @@
 						<div class="contactIcon">✉️</div>
 						<div class="contactText">
 							<strong id="lblEmail">E-mail</strong>
-							<div><a href="mailto:hello@realty.example" id="contactEmail">hello@realty.example</a></div>
+							<div><a href="mailto:hello@komplexingatlan.com" id="contactEmail">hello@komplexingatlan.com</a></div>
 						</div>
 					</div>
 				</div>
@@ -921,7 +925,7 @@
 	</section>
 	<section id="about" class="section">
 		<div class="container">
-			<h3 class="section-title" id="aboutTitle">Miért a Realty</h3>
+			<h3 class="section-title" id="aboutTitle">Miért a KomplexIngatlan</h3>
 			<div class="business">
 				<div class="tile">
 					<h3 id="tile1h">Helyismeret</h3>
@@ -941,10 +945,10 @@
 	<footer>
 		<div class="container footer-inner">
 			<div class="brand" style="gap:8px">
-				<div class="logo" style="width:26px;height:26px"></div><strong>Realty</strong>
+				<div class="logo" style="width:26px;height:26px"></div><strong>KomplexIngatlan.com</strong>
 			</div>
-			<div class="small">© <span id="year"></span> Realty. Minden jog fenntartva.</div>
-			<div class="pill" id="footerMail">hello@realty.example</div>
+			<div class="small">© <span id="year"></span> KomplexIngatlan. Minden jog fenntartva.</div>
+			<div class="pill" id="footerMail">hello@komplexingatlan.com</div>
 		</div>
 	</footer>
 	<div id="modal" class="modal">
@@ -971,16 +975,16 @@
 				<div class="modal-chips" id="modalChips"></div>
 				<div id="modalDesc" class="modal-desc"></div>
 				<div class="agent">
-					<div class="agent-avatar" id="agentAvatar">AJ</div>
+					<div class="agent-avatar" id="agentAvatar">TT</div>
 					<div class="agent-info">
-						<div style="font-weight:700" id="agentName">Alex Johnson</div>
+						<div style="font-weight:700" id="agentName">Takách Tamás</div>
 						<div class="muted" id="agentRole" style="color:#64748b">Ingatlanügynök</div>
 					</div>
 					<div class="agent-actions">
 						<a id="ctaCall" href="tel:+15551234567">
 							<svg width="16" height="16" viewBox="0 0 24 24">
-								<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.75 19.75 0 0 1-8.63-3.07 19.38 19.38 0 0 1-6-6A19.75 19.75 0 0 1 2.08 4.18 2 2 0 0 1 4.06 2h3a2 2 0 0 1 2 1.72c.12.89.34 1.76.65 2.59a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.49-1.17a2 2 0 0 1 2.11-.45c.83.31 1.7.53 2.59.65A2 2 0 0 1 22 16.92z" fill="#fff" /></svg> Hívja most </a>
-						<a id="ctaEmail" class="secondary" href="mailto:hello@realty.example?subject=Érdeklődés">
+								<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.75 19.75 0 0 1-8.63-3.07 19.38 19.38 0 0 1-6-6A19.75 19.75 0 0 1 2.08 4.18 2 2 0 0 1 4.06 2h3a2 2 0 0 1 2 1.72c.12.89.34 1.76.65 2.59a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.49-1.17a2 2 0 0 1 2.11-.45c.83.31 1.7.53 2.59.65A2 2 0 0 1 22 16.92z" fill="#fff" /></svg> Hívjon most </a>
+						<a id="ctaEmail" class="secondary" href="mailto:hello@komplexingatlan.com?subject=Érdeklődés">
 							<svg width="16" height="16" viewBox="0 0 24 24">
 								<path d="M4 4h16v16H4z" fill="none" stroke="#fff" stroke-width="2" />
 								<path d="M22 6l-10 7L2 6" fill="none" stroke="#fff" stroke-width="2" /></svg> E-mail küldése </a>
@@ -1083,7 +1087,7 @@
 			navBrowse: 'Böngészés',
 			navMap: 'Térkép',
 			navAbout: 'Rólunk',
-			navCTA: 'Hirdesse meg',
+			navCTA: 'Hirdessél velünk',
 			heroHeadline: 'Találd meg új otthonod',
 			heroSub: 'Válogatott ingatlanok egy helyen. Keress, szűrj és fedezd fel a lehetőségeket.',
 			heroSearch: 'Keresés városra, címre vagy kulcsszóra',
@@ -1110,16 +1114,16 @@
 			baLabelShort: 'fürdő',
 			m2: 'm²',
 			mapTitle: 'Irodánk elérhetőségei',
-			aboutTitle: 'Miért a Realty',
+			aboutTitle: 'Miért a KomplexIngatlan',
 			tile1h: 'Helyismeret',
 			tile1p: 'Ügynökeink jól ismerik a környékeket és naprakész piaci tudással segítenek.',
 			tile2h: 'Átlátható folyamat',
 			tile2p: 'Böngésszen, hasonlítson és foglaljon megtekintéseket egyszerűen és átláthatóan.',
 			tile3h: 'Teljes körű támogatás',
 			tile3p: 'A felfedezéstől a szerződésig végigkísérjük, hogy magabiztosan dönthessen.',
-			footerRights: n => '© ' + n + ' Realty. Minden jog fenntartva.',
+			footerRights: n => '© ' + n + ' KomplexIngatlan. Minden jog fenntartva.',
 			agentRole: 'Ingatlanügynök',
-			callNow: 'Hívja most',
+			callNow: 'Hívjon most',
 			emailAgent: 'E-mail küldése',
 			contactAddress: 'Cím',
 			contactHours: 'Nyitvatartás',
@@ -1164,14 +1168,14 @@
 			baLabelShort: 'kúpeľňa',
 			m2: 'm²',
 			mapTitle: 'Naše kontakty',
-			aboutTitle: 'Prečo Realty',
+			aboutTitle: 'Prečo KomplexIngatlan',
 			tile1h: 'Lokálne znalosti',
 			tile1p: 'Naši agenti poznajú štvrte a prinášajú aktuálne informácie o trhu.',
 			tile2h: 'Transparentný proces',
 			tile2p: 'Prehliadajte, porovnávajte a rezervujte si obhliadky jednoducho a prehľadne.',
 			tile3h: 'Komplexná podpora',
 			tile3p: 'Od vyhľadávania až po podpis zmluvy sme s vami pri každom kroku.',
-			footerRights: n => '© ' + n + ' Realty. Všetky práva vyhradené.',
+			footerRights: n => '© ' + n + ' KomplexIngatlan. Všetky práva vyhradené.',
 			agentRole: 'Realitný maklér',
 			callNow: 'Zavolať teraz',
 			emailAgent: 'Napísať e‑mail',
@@ -1508,10 +1512,10 @@
 			const lng = (loc && loc.lng) || FALLBACK_LNG
 			state.map.setView([lat, lng], 16)
 			const m = L.marker([lat, lng]).addTo(state.map)
-			m.bindPopup('Realty<br>' + escapeHtml(BUSINESS_ADDRESS))
+			m.bindPopup('KomplexIngatlan<br>' + escapeHtml(BUSINESS_ADDRESS))
 		} catch (e) {
 			const m = L.marker([FALLBACK_LAT, FALLBACK_LNG]).addTo(state.map)
-			m.bindPopup('Realty<br>' + escapeHtml(BUSINESS_ADDRESS))
+			m.bindPopup('KomplexIngatlan<br>' + escapeHtml(BUSINESS_ADDRESS))
 		}
 	}
 
