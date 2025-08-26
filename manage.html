@@ -1,0 +1,307 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Manage Listings • Realty</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{--bg:#0b0c10;--card:#111216;--muted:#8a8f98;--text:#e8eaee;--primary:#5b8cff;--border:#1b1e25;--ok:#13c27a;--err:#ef476f;--chip:#1a1d25}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#0b0c10,#0e1016);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+.container{max-width:1200px;margin:0 auto;padding:28px}
+.header{display:flex;gap:14px;align-items:center;justify-content:space-between;margin-bottom:16px}
+.brand{display:flex;gap:10px;align-items:center}
+.logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#5b8cff,#6de0ff)}
+.brand h1{font-size:18px;margin:0}
+.header a{color:#dfe3ea;text-decoration:none;background:#171a21;border:1px solid var(--border);padding:9px 12px;border-radius:10px}
+.header a:hover{border-color:#2a2f39}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+input,select{background:#0e1014;border:1px solid var(--border);color:#e7e9ee;border-radius:10px;padding:10px 12px;font-size:14px;outline:none}
+input:focus,select:focus{border-color:#2a2f39}
+.search{flex:1;min-width:240px}
+select{min-width:160px}
+.btn{appearance:none;border:none;border-radius:10px;padding:10px 14px;font-weight:600;cursor:pointer;background:var(--primary);color:#fff}
+.status{font-size:13px;color:var(--muted);margin-top:2px}
+.status.ok{color:var(--ok)}
+.status.err{color:var(--err)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:1100px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:720px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.media{position:relative;height:200px;background:#0c0d12}
+.media img{width:100%;height:100%;object-fit:cover;display:block}
+.badges{position:absolute;inset:10px auto auto 10px;display:flex;gap:8px;flex-wrap:wrap}
+.badge{background:rgba(0,0,0,.5);backdrop-filter:blur(4px);color:#fff;padding:6px 10px;border-radius:999px;font-size:12px;border:1px solid rgba(255,255,255,.1)}
+.price{position:absolute;right:10px;top:10px;background:linear-gradient(135deg,#5b8cff,#7dc8ff);color:#0b0c10;font-weight:700}
+.body{padding:12px 12px 6px 12px;display:flex;flex-direction:column;gap:6px}
+.title{font-size:16px;margin:0}
+.addr{color:var(--muted);font-size:13px}
+.specs{display:flex;gap:10px;flex-wrap:wrap;color:#cbd1da;font-size:13px}
+.specs span{background:var(--chip);border:1px solid var(--border);padding:6px 8px;border-radius:999px}
+.desc{color:#c7ccd6;font-size:13px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.actions{display:flex;gap:8px;padding:10px 12px 12px}
+.btn-secondary{background:#171a21;color:#e7e9ee;border:1px solid var(--border)}
+.btn-danger{background:#ef476f;color:#fff}
+.details{padding:12px;border-top:1px solid var(--border);display:none}
+.row{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.row .col-3{grid-column:span 3}
+.row .col-2{grid-column:span 2}
+.row .col-1{grid-column:span 1}
+.row .col-6{grid-column:span 6}
+@media(max-width:900px){.row{grid-template-columns:1fr}.row .col-1,.row .col-2,.row .col-3,.row .col-6{grid-column:1/span 1}}
+label{display:block;font-size:12px;color:var(--muted);margin:8px 0 6px}
+input[type=text],input[type=number],select,textarea{width:100%;background:#0e1014;border:1px solid var(--border);color:#e7e9ee;border-radius:10px;padding:10px 12px;font-size:14px;outline:none}
+textarea{min-height:90px;resize:vertical}
+.photoBar{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.thumb{position:relative;width:96px;height:72px;border-radius:8px;overflow:hidden;border:1px solid var(--border);background:#0c0d12}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.thumb button{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.55);color:#fff;border:none;border-radius:8px;font-size:11px;padding:4px 6px;cursor:pointer}
+.addPhoto{display:inline-block;background:#151821;border:1px dashed #2a2f39;color:#dfe3ea;padding:10px 12px;border-radius:10px;cursor:pointer}
+footer.meta{color:var(--muted);font-size:12px;padding:8px 12px 12px;border-top:1px dotted var(--border)}
+.empty{background:var(--card);border:1px dashed var(--border);border-radius:14px;padding:18px;text-align:center;color:#cbd1da}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="brand"><div class="logo"></div><h1>Manage Listings</h1></div>
+    <a href="new.html">Add New</a>
+  </div>
+  <div class="toolbar">
+    <input id="q" class="search" placeholder="Search by title, city, state">
+    <select id="filterType">
+      <option value="">All types</option>
+      <option>House</option>
+      <option>Apartment</option>
+      <option>Condo</option>
+      <option>Townhouse</option>
+      <option>Land</option>
+    </select>
+    <select id="sortBy">
+      <option value="date_desc">Newest</option>
+      <option value="date_asc">Oldest</option>
+      <option value="price_asc">Price ↑</option>
+      <option value="price_desc">Price ↓</option>
+    </select>
+    <button class="btn" id="refreshBtn">Refresh</button>
+  </div>
+  <div id="status" class="status"></div>
+  <div id="grid" class="grid"></div>
+</div>
+
+<script>
+const BIN_ID='68add1c9ae596e708fd72498';
+const MASTER_KEY='$2a$10$9sO/ja29sMebpWNvsWmp5.dJ6lv7CPeLBMRFaA/cAEwz42ii6qlCS';
+const BASE_URL='https://api.jsonbin.io/v3/b/'+BIN_ID;
+const statusEl=document.getElementById('status');
+const grid=document.getElementById('grid');
+const q=document.getElementById('q');
+const filterType=document.getElementById('filterType');
+const sortBy=document.getElementById('sortBy');
+const refreshBtn=document.getElementById('refreshBtn');
+let listings=[];
+function setStatus(msg,type){statusEl.textContent=msg||'';statusEl.className='status '+(type||'')}
+function uid(){if(crypto.randomUUID){return crypto.randomUUID()}return Date.now().toString(36)+Math.random().toString(36).slice(2)}
+function fmtPrice(n){if(typeof n!=='number'||isNaN(n))return '';return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(n)}
+function normalize(x){
+  const y={...x};
+  const title=y.title||y.heading||'Untitled';
+  const description=y.description||y.additionalDetails||'';
+  let price=y.price;
+  if(price==null&&y.data){const m=String(y.data).match(/[\d,]+/);if(m)price=Number(m[0].replace(/,/g,''))}
+  const id=y.id||uid();
+  const propertyType=y.propertyType||y.type||'';
+  const photos=Array.isArray(y.photos)?y.photos:[];
+  return {id, title, description, price: typeof price==='number'?price:Number(price)||0, propertyType, bedrooms:Number(y.bedrooms||0), bathrooms:Number(y.bathrooms||0), area:Number(y.area||0), address:y.address||'', city:y.city||'', state:y.state||'', photos, createdAt:y.createdAt||new Date().toISOString(), updatedAt:y.updatedAt||null};
+}
+async function fetchListings(){
+  const res=await fetch(BASE_URL+'/latest',{headers:{'X-Master-Key':MASTER_KEY,'Content-Type':'application/json'}});
+  if(!res.ok){if(res.status===404)return [];throw new Error('Failed to fetch')}
+  const j=await res.json();const rec=j&&j.record!=null?j.record:null;return Array.isArray(rec)?rec:[];
+}
+async function saveListings(arr){
+  const res=await fetch(BASE_URL,{method:'PUT',headers:{'X-Master-Key':MASTER_KEY,'Content-Type':'application/json'},body:JSON.stringify(arr)});
+  if(!res.ok)throw new Error('Failed to save');
+}
+function getFilteredSorted(){
+  const term=q.value.trim().toLowerCase();
+  const type=filterType.value;
+  let arr=[...listings];
+  if(term){arr=arr.filter(it=>(it.title+' '+it.city+' '+it.state).toLowerCase().includes(term))}
+  if(type){arr=arr.filter(it=>it.propertyType===type)}
+  const s=sortBy.value;
+  arr.sort((a,b)=>{
+    if(s==='price_asc')return (a.price||0)-(b.price||0);
+    if(s==='price_desc')return (b.price||0)-(a.price||0);
+    if(s==='date_asc')return new Date(a.createdAt)-new Date(b.createdAt);
+    return new Date(b.createdAt)-new Date(a.createdAt);
+  });
+  return arr;
+}
+function placeholderImg(){
+  const svg=encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#111216"/><stop offset="100%" stop-color="#0c0d12"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g)"/><text x="50%" y="50%" fill="#5b8cff" font-size="28" font-family="Arial" text-anchor="middle" dominant-baseline="middle">No Photo</text></svg>');
+  return 'data:image/svg+xml;charset=utf-8,'+svg;
+}
+function render(){
+  const list=getFilteredSorted();
+  grid.innerHTML='';
+  if(!list.length){const d=document.createElement('div');d.className='empty';d.textContent='No listings match your filters.';grid.appendChild(d);return}
+  list.forEach(item=>{
+    const card=document.createElement('div');card.className='card';card.dataset.id=item.id;
+    const media=document.createElement('div');media.className='media';
+    const img=document.createElement('img');img.src=item.photos&&item.photos[0]?item.photos[0]:placeholderImg();media.appendChild(img);
+    const badges=document.createElement('div');badges.className='badges';
+    const b1=document.createElement('div');b1.className='badge';b1.textContent=item.propertyType||'—';
+    const b2=document.createElement('div');b2.className='badge';b2.textContent=(item.bedrooms||0)+' bd • '+(item.bathrooms||0)+' ba • '+(item.area||0)+' sqft';
+    badges.appendChild(b1);badges.appendChild(b2);media.appendChild(badges);
+    const price=document.createElement('div');price.className='badge price';price.textContent=fmtPrice(item.price||0);media.appendChild(price);
+    const body=document.createElement('div');body.className='body';
+    const title=document.createElement('h3');title.className='title';title.textContent=item.title||'Untitled';
+    const addr=document.createElement('div');addr.className='addr';addr.textContent=[item.address,item.city,item.state].filter(Boolean).join(', ');
+    const specs=document.createElement('div');specs.className='specs';
+    const s1=document.createElement('span');s1.textContent=(item.bedrooms||0)+' Bedrooms';
+    const s2=document.createElement('span');s2.textContent=(item.bathrooms||0)+' Bathrooms';
+    const s3=document.createElement('span');s3.textContent=(item.area||0)+' sqft';
+    specs.appendChild(s1);specs.appendChild(s2);specs.appendChild(s3);
+    const desc=document.createElement('div');desc.className='desc';desc.textContent=item.description||'';
+    const actions=document.createElement('div');actions.className='actions';
+    const editBtn=document.createElement('button');editBtn.className='btn-secondary';editBtn.textContent='Edit';
+    const delBtn=document.createElement('button');delBtn.className='btn-danger';delBtn.textContent='Delete';
+    actions.appendChild(editBtn);actions.appendChild(delBtn);
+    body.appendChild(title);body.appendChild(addr);body.appendChild(specs);body.appendChild(desc);
+    const details=document.createElement('div');details.className='details';
+    const form=document.createElement('div');
+    form.className='row';
+    const fTitle=fieldText('Title',item.title,'col-6');
+    const fPrice=fieldNumber('Price (USD)',item.price||0,'col-3');
+    const fType=fieldSelect('Property Type',item.propertyType,'col-3',['','House','Apartment','Condo','Townhouse','Land']);
+    const fBeds=fieldNumber('Bedrooms',item.bedrooms||0,'col-2',0,1);
+    const fBaths=fieldNumber('Bathrooms',item.bathrooms||0,'col-2',0,.5);
+    const fArea=fieldNumber('Area (sqft)',item.area||0,'col-2',0,1);
+    const fAddr=fieldText('Address',item.address,'col-6');
+    const fCity=fieldText('City',item.city,'col-3');
+    const fState=fieldText('State/Province',item.state,'col-3');
+    const fDesc=fieldTextarea('Description',item.description,'col-6');
+    [fTitle.el,fPrice.el,fType.el,fBeds.el,fBaths.el,fArea.el,fAddr.el,fCity.el,fState.el,fDesc.el].forEach(e=>form.appendChild(e));
+    const photosWrap=document.createElement('div');photosWrap.className='col-6';
+    const lab=document.createElement('label');lab.textContent='Photos';
+    const bar=document.createElement('div');bar.className='photoBar';
+    const addBtn=document.createElement('label');addBtn.className='addPhoto';addBtn.textContent='Add Photos';
+    const addInput=document.createElement('input');addInput.type='file';addInput.accept='image/*';addInput.multiple=true;addInput.style.display='none';
+    addBtn.appendChild(addInput);
+    function renderThumbs(){
+      bar.innerHTML='';item.photos=(Array.isArray(item.photos)?item.photos:[]);
+      item.photos.forEach((url,idx)=>{const th=document.createElement('div');th.className='thumb';const im=document.createElement('img');im.src=url;const rm=document.createElement('button');rm.textContent='Remove';rm.onclick=()=>{item.photos.splice(idx,1);renderThumbs()};th.appendChild(im);th.appendChild(rm);bar.appendChild(th)});
+      bar.appendChild(addBtn);
+    }
+    addInput.addEventListener('change',async e=>{
+      const files=[...e.target.files].slice(0,10);
+      setStatus('Uploading photos...');
+      try{
+        for(const file of files){
+          const small=await compressImage(file);
+          const url=await uploadTelegraph(small);
+          item.photos=item.photos||[];if(item.photos.length<10)item.photos.push(url);
+        }
+        setStatus('Photos uploaded.','ok');
+        renderThumbs();
+      }catch(err){setStatus('Photo upload failed.','err')}
+      addInput.value='';
+    });
+    renderThumbs();
+    photosWrap.appendChild(lab);photosWrap.appendChild(bar);
+    form.appendChild(photosWrap);
+    const formActions=document.createElement('div');formActions.className='col-6';
+    const saveBtn=document.createElement('button');saveBtn.className='btn';saveBtn.textContent='Save Changes';
+    const cancelBtn=document.createElement('button');cancelBtn.className='btn-secondary';cancelBtn.style.marginLeft='8px';cancelBtn.textContent='Cancel';
+    const formActWrap=document.createElement('div');formActWrap.style.marginTop='8px';formActWrap.appendChild(saveBtn);formActWrap.appendChild(cancelBtn);
+    formActions.appendChild(formActWrap);
+    details.appendChild(form);
+    const meta=document.createElement('footer');meta.className='meta';meta.textContent='Created '+new Date(item.createdAt).toLocaleString()+(item.updatedAt?' • Updated '+new Date(item.updatedAt).toLocaleString():'');
+    card.appendChild(media);card.appendChild(body);card.appendChild(actions);card.appendChild(details);card.appendChild(meta);
+    editBtn.addEventListener('click',()=>{details.style.display=details.style.display==='block'?'none':'block'});
+    cancelBtn.addEventListener('click',()=>{details.style.display='none'});
+    saveBtn.addEventListener('click',async()=>{
+      const updated={
+        ...item,
+        title:fTitle.get(),
+        price:Number(fPrice.get()||0),
+        propertyType:fType.get(),
+        bedrooms:Number(fBeds.get()||0),
+        bathrooms:Number(fBaths.get()||0),
+        area:Number(fArea.get()||0),
+        address:fAddr.get(),
+        city:fCity.get(),
+        state:fState.get(),
+        description:fDesc.get(),
+        updatedAt:new Date().toISOString()
+      };
+      setStatus('Saving...');
+      try{
+        const all=await fetchListings();
+        const norm=all.map(normalize);
+        const idx=norm.findIndex(x=>x.id===item.id);
+        if(idx>-1){
+          norm[idx]=updated;
+        }else{
+          norm.push(updated);
+        }
+        await saveListings(norm);
+        listings=norm;
+        setStatus('Saved.','ok');
+        details.style.display='none';
+        render();
+      }catch(e){setStatus('Error saving.','err')}
+    });
+    delBtn.addEventListener('click',async()=>{
+      if(!confirm('Delete this listing?'))return;
+      setStatus('Deleting...');
+      try{
+        const all=await fetchListings();
+        const norm=all.map(normalize).filter(x=>x.id!==item.id);
+        await saveListings(norm);
+        listings=norm;
+        setStatus('Deleted.','ok');
+        render();
+      }catch(e){setStatus('Error deleting.','err')}
+    });
+    grid.appendChild(card);
+  });
+}
+function fieldText(labelText,value,cls){const wrap=document.createElement('div');wrap.className=cls;const lab=document.createElement('label');lab.textContent=labelText;const inp=document.createElement('input');inp.type='text';inp.value=value||'';wrap.appendChild(lab);wrap.appendChild(inp);return {el:wrap,get:()=>inp.value.trim()}}
+function fieldNumber(labelText,value,cls,min=0,step=1){const wrap=document.createElement('div');wrap.className=cls;const lab=document.createElement('label');lab.textContent=labelText;const inp=document.createElement('input');inp.type='number';inp.value=value||0;inp.min=min;inp.step=step;wrap.appendChild(lab);wrap.appendChild(inp);return {el:wrap,get:()=>inp.value}}
+function fieldSelect(labelText,value,cls,opts){const wrap=document.createElement('div');wrap.className=cls;const lab=document.createElement('label');lab.textContent=labelText;const sel=document.createElement('select');opts.forEach(o=>{const op=document.createElement('option');op.value=o;op.textContent=o||'Select type';if(o===value)op.selected=true;sel.appendChild(op)});wrap.appendChild(lab);wrap.appendChild(sel);return {el:wrap,get:()=>sel.value}}
+function fieldTextarea(labelText,value,cls){const wrap=document.createElement('div');wrap.className=cls;const lab=document.createElement('label');lab.textContent=labelText;const ta=document.createElement('textarea');ta.value=value||'';wrap.appendChild(lab);wrap.appendChild(ta);return {el:wrap,get:()=>ta.value.trim()}}
+function fileToPreview(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file)})}
+async function compressImage(file,max=1600,quality=.86){
+  const dataUrl=await fileToPreview(file);
+  const img=new Image();img.decoding='async';img.src=dataUrl;await img.decode();
+  const scale=Math.min(1,max/Math.max(img.width,img.height));
+  const canvas=document.createElement('canvas');canvas.width=Math.round(img.width*scale);canvas.height=Math.round(img.height*scale);
+  const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,canvas.width,canvas.height);
+  const blob=await new Promise(r=>canvas.toBlob(r,'image/jpeg',quality));
+  return new File([blob],(file.name||'photo')+'.jpg',{type:'image/jpeg'});
+}
+async function uploadTelegraph(file){
+  const fd=new FormData();fd.append('file',file,file.name||'photo.jpg');
+  const r=await fetch('https://telegra.ph/upload',{method:'POST',body:fd});
+  if(!r.ok)throw new Error('Upload failed');
+  const j=await r.json();
+  if(Array.isArray(j)&&j[0]&&j[0].src)return 'https://telegra.ph'+j[0].src;
+  throw new Error('Upload failed');
+}
+async function init(){
+  setStatus('Loading...');
+  try{
+    const raw=await fetchListings();
+    listings=raw.map(normalize);
+    setStatus('');
+    render();
+  }catch(e){setStatus('Error loading.','err')}
+}
+[q,filterType,sortBy].forEach(el=>el.addEventListener('input',render));
+refreshBtn.addEventListener('click',init);
+init();
+</script>
+</body>
+</html>

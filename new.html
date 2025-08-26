@@ -1,0 +1,209 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Add Listing • Realty</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{--bg:#0b0c10;--card:#111216;--muted:#8a8f98;--text:#e8eaee;--primary:#5b8cff;--border:#1b1e25;--ok:#13c27a;--err:#ef476f}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:linear-gradient(180deg,#0b0c10,#0e1016);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+.container{max-width:1100px;margin:0 auto;padding:28px}
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.brand{display:flex;gap:10px;align-items:center}
+.logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#5b8cff,#6de0ff)}
+.brand h1{font-size:18px;margin:0;letter-spacing:.2px}
+.header a{color:var(--muted);text-decoration:none;padding:8px 12px;border:1px solid var(--border);border-radius:10px}
+.header a:hover{color:#fff;border-color:#2a2f39}
+.grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px}
+.card h2{margin:0 0 12px 0;font-size:16px;color:#f5f7fb}
+.row{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.row .col-3{grid-column:span 3}
+.row .col-2{grid-column:span 2}
+.row .col-1{grid-column:span 1}
+.row .col-6{grid-column:span 6}
+@media(max-width:900px){.row{grid-template-columns:1fr}.row .col-1,.row .col-2,.row .col-3,.row .col-6{grid-column:1/span 1}}
+label{display:block;font-size:12px;color:var(--muted);margin:10px 0 6px}
+input,select,textarea{width:100%;background:#0e1014;border:1px solid var(--border);color:#e7e9ee;border-radius:10px;padding:10px 12px;font-size:14px;outline:none}
+input:focus,select:focus,textarea:focus{border-color:#2a2f39}
+textarea{min-height:120px;resize:vertical}
+.badge{font-size:12px;color:var(--muted)}
+.actions{display:flex;align-items:center;gap:10px;margin-top:16px}
+button{appearance:none;border:none;border-radius:12px;padding:10px 14px;font-weight:600;cursor:pointer}
+.btn{background:var(--primary);color:#fff}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.btn-secondary{background:#171a21;color:#e7e9ee;border:1px solid var(--border)}
+.status{font-size:13px;color:var(--muted)}
+.status.ok{color:var(--ok)}
+.status.err{color:var(--err)}
+.uploader{border:1px dashed #2a2f39;background:#0e1014;border-radius:14px;padding:14px;text-align:center}
+.uploader input{display:none}
+.uploader .hint{color:var(--muted);font-size:13px}
+.uploader .btn-mini{margin-top:8px;display:inline-block;background:#151821;border:1px solid var(--border);padding:8px 10px;border-radius:10px;color:#dfe3ea}
+.previews{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:12px}
+.preview{position:relative;border-radius:12px;overflow:hidden;border:1px solid #1b1e25;background:#0c0d12}
+.preview img{width:100%;height:100px;object-fit:cover;display:block}
+.preview .rm{position:absolute;top:6px;right:6px;background:rgba(0,0,0,.55);color:#fff;border:none;border-radius:10px;font-size:12px;padding:4px 8px;cursor:pointer}
+.meta{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:12px;margin-top:6px}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="brand"><div class="logo"></div><h1>Realty Admin</h1></div>
+    <a href="manage.html">Manage Listings</a>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Listing Details</h2>
+      <div class="row">
+        <div class="col-6">
+          <label for="title">Title</label>
+          <input id="title" placeholder="Modern 3BR family home" required>
+        </div>
+        <div class="col-3">
+          <label for="price">Price (USD)</label>
+          <input id="price" type="number" min="0" step="1" placeholder="450000" required>
+        </div>
+        <div class="col-3">
+          <label for="type">Property Type</label>
+          <select id="type" required>
+            <option value="">Select type</option>
+            <option>House</option>
+            <option>Apartment</option>
+            <option>Condo</option>
+            <option>Townhouse</option>
+            <option>Land</option>
+          </select>
+        </div>
+        <div class="col-2">
+          <label for="beds">Bedrooms</label>
+          <input id="beds" type="number" min="0" step="1" placeholder="3" required>
+        </div>
+        <div class="col-2">
+          <label for="baths">Bathrooms</label>
+          <input id="baths" type="number" min="0" step="0.5" placeholder="2" required>
+        </div>
+        <div class="col-2">
+          <label for="area">Area (sqft)</label>
+          <input id="area" type="number" min="0" step="1" placeholder="1800" required>
+        </div>
+        <div class="col-6">
+          <label for="address">Address</label>
+          <input id="address" placeholder="123 Maple Street" required>
+        </div>
+        <div class="col-3">
+          <label for="city">City</label>
+          <input id="city" placeholder="Austin" required>
+        </div>
+        <div class="col-3">
+          <label for="state">State/Province</label>
+          <input id="state" placeholder="TX" required>
+        </div>
+        <div class="col-6">
+          <label for="desc">Description</label>
+          <textarea id="desc" placeholder="Write a short description" required></textarea>
+        </div>
+      </div>
+      <div class="actions">
+        <button id="saveBtn" class="btn">Save Listing</button>
+        <span id="status" class="status"></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Photos</h2>
+      <div class="uploader" id="drop">
+        <div class="hint">Drag & drop photos here, or</div>
+        <label class="btn-mini" for="photos">Browse</label>
+        <input id="photos" type="file" accept="image/*" multiple>
+        <div class="meta"><span id="photoCount">0 selected</span><span>Up to 10 photos • Max ~5MB each</span></div>
+      </div>
+      <div class="previews" id="previews"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const BIN_ID='68add1c9ae596e708fd72498';
+const MASTER_KEY='$2a$10$9sO/ja29sMebpWNvsWmp5.dJ6lv7CPeLBMRFaA/cAEwz42ii6qlCS';
+const BASE_URL='https://api.jsonbin.io/v3/b/'+BIN_ID;
+const statusEl=document.getElementById('status');
+const saveBtn=document.getElementById('saveBtn');
+const drop=document.getElementById('drop');
+const inputPhotos=document.getElementById('photos');
+const previews=document.getElementById('previews');
+const photoCount=document.getElementById('photoCount');
+let queuedFiles=[];
+function setStatus(msg,type){statusEl.textContent=msg;statusEl.className='status '+(type||'')}
+function uid(){if(crypto.randomUUID){return crypto.randomUUID()}return Date.now().toString(36)+Math.random().toString(36).slice(2)}
+function fileToPreview(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file)})}
+function renderPreviews(){previews.innerHTML='';photoCount.textContent=queuedFiles.length+' selected';queuedFiles.forEach((f,i)=>{const wrap=document.createElement('div');wrap.className='preview';const img=document.createElement('img');img.src=f.preview;const rm=document.createElement('button');rm.className='rm';rm.textContent='Remove';rm.onclick=()=>{queuedFiles.splice(i,1);renderPreviews()};wrap.appendChild(img);wrap.appendChild(rm);previews.appendChild(wrap)})}
+function addFiles(files){for(const f of files){if(!f.type.startsWith('image/'))continue;if(queuedFiles.length>=10)break;queuedFiles.push({file:f,preview:'',uploadedUrl:null})}Promise.all(queuedFiles.map(async q=>{if(!q.preview)q.preview=await fileToPreview(q.file)})).then(renderPreviews)}
+drop.addEventListener('dragover',e=>{e.preventDefault();drop.style.borderColor='#2f86ff'});drop.addEventListener('dragleave',()=>{drop.style.borderColor='#2a2f39'});drop.addEventListener('drop',e=>{e.preventDefault();drop.style.borderColor='#2a2f39';addFiles(e.dataTransfer.files)});
+inputPhotos.addEventListener('change',e=>addFiles(e.target.files));
+async function compressImage(file,max=1600,quality=.86){
+  const dataUrl=await fileToPreview(file);
+  const img=new Image();img.decoding='async';img.src=dataUrl;await img.decode();
+  const scale=Math.min(1,max/Math.max(img.width,img.height));
+  const canvas=document.createElement('canvas');canvas.width=Math.round(img.width*scale);canvas.height=Math.round(img.height*scale);
+  const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,canvas.width,canvas.height);
+  const blob=await new Promise(r=>canvas.toBlob(r,'image/jpeg',quality));
+  return new File([blob],(file.name||'photo')+'.jpg',{type:'image/jpeg'});
+}
+async function uploadTelegraph(file){
+  const fd=new FormData();fd.append('file',file,file.name||'photo.jpg');
+  const r=await fetch('https://telegra.ph/upload',{method:'POST',body:fd});
+  if(!r.ok)throw new Error('Upload failed');
+  const j=await r.json();
+  if(Array.isArray(j)&&j[0]&&j[0].src)return 'https://telegra.ph'+j[0].src;
+  throw new Error('Upload failed');
+}
+async function uploadPhotos(){
+  const urls=[];
+  for(const q of queuedFiles){
+    if(q.uploadedUrl){urls.push(q.uploadedUrl);continue}
+    const small=await compressImage(q.file);
+    const url=await uploadTelegraph(small);
+    q.uploadedUrl=url;urls.push(url);
+  }
+  return urls;
+}
+async function fetchListings(){
+  const res=await fetch(BASE_URL+'/latest',{headers:{'X-Master-Key':MASTER_KEY,'Content-Type':'application/json'}});
+  if(!res.ok){if(res.status===404)return [];throw new Error('Fetch failed')}
+  const j=await res.json();const rec=j&&j.record!=null?j.record:null;return Array.isArray(rec)?rec:[];
+}
+async function saveListings(arr){
+  const res=await fetch(BASE_URL,{method:'PUT',headers:{'X-Master-Key':MASTER_KEY,'Content-Type':'application/json'},body:JSON.stringify(arr)});
+  if(!res.ok)throw new Error('Save failed');
+}
+function val(id){return document.getElementById(id).value.trim()}
+saveBtn.addEventListener('click',async()=>{
+  const title=val('title'),priceStr=val('price'),type=document.getElementById('type').value,beds=val('beds'),baths=val('baths'),area=val('area'),address=val('address'),city=val('city'),state=val('state'),desc=val('desc');
+  if(!title||!priceStr||!type||!beds||!baths||!area||!address||!city||!state||!desc){setStatus('Please fill in all required fields.','err');return}
+  setStatus('Uploading photos...');
+  saveBtn.disabled=true;
+  try{
+    const photos=await uploadPhotos();
+    setStatus('Saving listing...');
+    const list=await fetchListings();
+    const item={id:uid(),title,price:Number(priceStr),propertyType:type,bedrooms:Number(beds),bathrooms:Number(baths),area:Number(area),address,city,state,description:desc,photos,createdAt:new Date().toISOString()};
+    list.push(item);
+    await saveListings(list);
+    setStatus('Saved successfully.','ok');
+    document.getElementById('title').value='';document.getElementById('price').value='';document.getElementById('type').value='';document.getElementById('beds').value='';document.getElementById('baths').value='';document.getElementById('area').value='';document.getElementById('address').value='';document.getElementById('city').value='';document.getElementById('state').value='';document.getElementById('desc').value='';
+    queuedFiles=[];renderPreviews();photoCount.textContent='0 selected';
+  }catch(e){
+    setStatus('Error: '+(e&&e.message?e.message:'Unable to save'),'err');
+  }finally{
+    saveBtn.disabled=false;
+  }
+});
+</script>
+</body>
+</html>
