@@ -1,9 +1,1715 @@
 <!doctype html>
-<html>
-  <head>
-    <title>This is the title of the webpage!</title>
-  </head>
-  <body>
-    <p>This is an example paragraph. Anything in the <strong>body</strong> tag will appear on the page, just like this <strong>p</strong> tag and its contents.</p>
-  </body>
+<html lang="hu">
+
+<head>
+	<meta charset="utf-8">
+	<title>Realty • Találd meg következő otthonod</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+	<style>
+	:root {
+		--bg: #fdfaf6;
+		--card: #ffffff;
+		--muted: #667085;
+		--text: #0b1320;
+		--primary: #f97316;
+		--primary-600: #ea580c;
+		--border: #efe7dc;
+		--chip: #fff7ed;
+		--ok: #16a34a;
+		--err: #dc2626;
+		--shadow: 0 12px 28px rgba(16, 24, 40, .08)
+	}
+
+	* {
+		box-sizing: border-box
+	}
+
+	html,
+	body {
+		height: 100%
+	}
+
+	body {
+		margin: 0;
+		background: var(--bg);
+		color: var(--text);
+		font-family: Inter, ui-sans-serif, system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif
+	}
+
+	a {
+		text-decoration: none;
+		color: inherit
+	}
+
+	.container {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 0 24px
+	}
+
+	.header {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		z-index: 40;
+		background: rgba(255, 255, 255, .95);
+		backdrop-filter: saturate(180%) blur(10px);
+		border-bottom: 1px solid var(--border)
+	}
+
+	.header-inner {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+		height: 64px
+	}
+
+	.brand {
+		display: flex;
+		align-items: center;
+		gap: 12px
+	}
+
+	.logo {
+		width: 36px;
+		height: 36px;
+		border-radius: 10px;
+		background: linear-gradient(135deg, #fb923c, #f59e0b)
+	}
+
+	.brand h1 {
+		font-size: 18px;
+		margin: 0;
+		font-weight: 800;
+		letter-spacing: .2px
+	}
+
+	.nav {
+		display: flex;
+		gap: 10px;
+		align-items: center
+	}
+
+	.nav a {
+		padding: 8px 12px;
+		border-radius: 10px;
+		color: #1f2937
+	}
+
+	.nav .cta {
+		background: var(--primary);
+		color: #fff
+	}
+
+	.switchers {
+		display: flex;
+		gap: 8px;
+		align-items: center;
+		background: #fff;
+		border: 1px solid var(--border);
+		border-radius: 12px;
+		padding: 4px
+	}
+
+	.dd {
+		position: relative
+	}
+
+	.dd-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		background: #fff;
+		border: 1px solid var(--border);
+		border-radius: 10px;
+		padding: 8px 10px;
+		cursor: pointer
+	}
+
+	.dd-btn .flag {
+		font-size: 16px
+	}
+
+	.dd-menu {
+		position: absolute;
+		right: 0;
+		top: 44px;
+		background: #fff;
+		border: 1px solid var(--border);
+		border-radius: 12px;
+		box-shadow: var(--shadow);
+		min-width: 160px;
+		display: none;
+		overflow: hidden
+	}
+
+	.dd.open .dd-menu {
+		display: block
+	}
+
+	.dd-item {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 10px 12px;
+		cursor: pointer
+	}
+
+	.dd-item:hover {
+		background: #fff7ed
+	}
+
+	.hero {
+		position: relative;
+		min-height: 92vh;
+		display: flex;
+		align-items: center;
+		overflow: hidden;
+		background: radial-gradient(1200px 600px at 80% -100px, #fff3e5, transparent), radial-gradient(1200px 600px at -200px 20%, #fff7ed, transparent);
+    background-image: url("https://i.ibb.co/9Hr5QhbC/modern-house-3840x2160-white-25699.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+	}
+
+	.hero .inner {
+		display: grid;
+		grid-template-columns: 1.2fr .8fr;
+		gap: 20px;
+		align-items: center
+	}
+
+	@media(max-width:980px) {
+		.hero .inner {
+			grid-template-columns: 1fr
+		}
+	}
+
+	.headline {
+		font-size: 56px;
+		line-height: 1.05;
+		margin: 0 0 10px;
+		font-weight: 800;
+    color: white;
+    filter: drop-shadow(2px 4px 6px #444)
+	}
+
+	.sub {
+		font-size: 18px;
+		color: #fff;
+		margin: 0 0 22px;
+    filter: drop-shadow(2px 4px 6px #222)
+	}
+
+	.searchbar {
+		display: flex;
+		gap: 8px;
+		flex-wrap: wrap;
+		background: #fff;
+		border: 1px solid var(--border);
+		border-radius: 14px;
+		padding: 10px;
+		box-shadow: var(--shadow)
+	}
+
+	.searchbar input,
+	.searchbar select {
+		flex: 1;
+		min-width: 180px;
+		border: 1px solid var(--border);
+		border-radius: 10px;
+		padding: 12px 12px;
+		font-size: 14px;
+		background: #fff;
+		color: #111
+	}
+
+	.searchbar button {
+		white-space: nowrap;
+		background: var(--primary);
+		color: #fff;
+		border: none;
+		border-radius: 10px;
+		padding: 12px 16px;
+		font-weight: 700;
+		cursor: pointer
+	}
+
+	.hero-visual {
+		display: flex;
+		align-items: center;
+		justify-content: center
+	}
+
+	.hero-card {
+		width: 100%;
+		max-width: 520px;
+		background: #fff;
+		border: 1px solid var(--border);
+		border-radius: 18px;
+		box-shadow: var(--shadow);
+		overflow: hidden;
+		transform: rotate(-2deg)
+	}
+
+	.hero-media {
+		height: 280px;
+		background: #fff3e5;
+		position: relative
+	}
+
+	.hero-media::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		background-image: radial-gradient(circle at 20% 20%, rgba(249, 115, 22, .12), transparent 40%), radial-gradient(circle at 70% 60%, rgba(251, 146, 60, .12), transparent 40%);
+    background-image: url("https://i.ibb.co/kV7LW7h5/4731b6c8772711eeb0e7f6f8c1ba65ae-upscaled.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+	}
+
+	.hero-body {
+		padding: 14px
+	}
+
+	.hero-title {
+		font-weight: 700;
+		margin: 0 0 4px
+	}
+
+	.hero-specs {
+		display: flex;
+		gap: 8px;
+		flex-wrap: wrap
+	}
+
+	.hero-specs span {
+		background: #fff7ed;
+		border: 1px solid var(--border);
+		border-radius: 999px;
+		padding: 6px 10px;
+		font-size: 12px;
+		color: #7c2d12
+	}
+
+	.section {
+		padding: 36px 0
+	}
+
+	.controls {
+		position: sticky;
+		top: 64px;
+		z-index: 30;
+		background: rgba(255, 255, 255, .95);
+		backdrop-filter: saturate(180%) blur(10px);
+		border-bottom: 1px solid var(--border)
+	}
+
+	.controls .bar {
+		display: flex;
+		gap: 10px;
+		align-items: center;
+		flex-wrap: wrap;
+		padding: 12px 0
+	}
+
+	.controls input,
+	.controls select {
+		border: 1px solid var(--border);
+		border-radius: 10px;
+		padding: 10px 12px;
+		background: #fff;
+		color: #111;
+		font-size: 14px
+	}
+
+	.controls .grow {
+		flex: 1;
+		min-width: 220px
+	}
+
+	.controls .btn {
+		background: #292524;
+		color: #fff;
+		border: none;
+		border-radius: 10px;
+		padding: 10px 14px;
+		font-weight: 700;
+		cursor: pointer
+	}
+
+	.results-head {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin: 12px 0;
+		color: #475569
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 16px
+	}
+
+	@media(max-width:1100px) {
+		.grid {
+			grid-template-columns: repeat(2, 1fr)
+		}
+	}
+
+	@media(max-width:720px) {
+		.grid {
+			grid-template-columns: 1fr
+		}
+	}
+
+	.card {
+		background: var(--card);
+		border: 1px solid var(--border);
+		border-radius: 16px;
+		overflow: hidden;
+		box-shadow: var(--shadow);
+		cursor: pointer;
+		transition: transform .12s ease, box-shadow .12s ease
+	}
+
+	.card:hover {
+		transform: translateY(-2px)
+	}
+
+	.carousel {
+		position: relative;
+		height: 220px;
+		background: #fff3e5
+	}
+
+	.carousel img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block
+	}
+
+	.carousel .nav {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 0 8px;
+		opacity: 0;
+		transition: opacity .15s ease
+	}
+
+	.carousel:hover .nav {
+		opacity: 1
+	}
+
+	.carousel button {
+		background: rgba(255, 255, 255, .95);
+		border: 1px solid var(--border);
+		width: 36px;
+		height: 36px;
+		border-radius: 999px;
+		display: grid;
+		place-items: center;
+		cursor: pointer
+	}
+
+	.badge {
+		position: absolute;
+		left: 10px;
+		top: 10px;
+		background: #7c2d12;
+		color: #fff;
+		border-radius: 999px;
+		padding: 6px 10px;
+		font-size: 12px
+	}
+
+	.price {
+		position: absolute;
+		right: 10px;
+		top: 10px;
+		background: linear-gradient(135deg, #fb923c, #f59e0b);
+		color: #0b1320;
+		border-radius: 999px;
+		padding: 6px 10px;
+		font-weight: 800
+	}
+
+	.body {
+		padding: 12px
+	}
+
+	.title {
+		font-weight: 700;
+		font-size: 16px;
+		margin: 0 0 4px
+	}
+
+	.addr {
+		color: #64748b;
+		font-size: 13px;
+		margin-bottom: 8px
+	}
+
+	.specs {
+		display: flex;
+		gap: 8px;
+		flex-wrap: wrap
+	}
+
+	.specs span {
+		background: var(--chip);
+		border: 1px solid #fed7aa;
+		border-radius: 999px;
+		padding: 6px 8px;
+		font-size: 12px;
+		color: #7c2d12
+	}
+
+	.skeleton {
+		position: relative;
+		overflow: hidden;
+		background: #fff1e6
+	}
+
+	.skeleton::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		transform: translateX(-100%);
+		background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .8), transparent);
+		animation: shimmer 1.2s infinite
+	}
+
+	@keyframes shimmer {
+		100% {
+			transform: translateX(100%)
+		}
+	}
+
+	.modal {
+		position: fixed;
+		inset: 0;
+		display: none;
+		align-items: center;
+		justify-content: center;
+		background: rgba(0, 0, 0, .35);
+		z-index: 50
+	}
+
+	.modal.open {
+		display: flex
+	}
+
+	.modal-card {
+		width: 95vw;
+		max-width: 980px;
+		max-height: 90vh;
+		background: #fff;
+		border-radius: 18px;
+		overflow: hidden;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		border: 1px solid var(--border)
+	}
+
+	@media(max-width:900px) {
+		.modal-card {
+			grid-template-columns: 1fr;
+			max-height: 96vh
+		}
+	}
+
+	.modal-media {
+		position: relative;
+		background: #fff3e5
+	}
+
+	.modal-media .carousel {
+		height: 100%;
+		min-height: 320px
+	}
+
+	.modal-body {
+		padding: 16px;
+		overflow: auto
+	}
+
+	.modal-title {
+		margin: 0 0 6px;
+		font-size: 22px;
+		font-weight: 800
+	}
+
+	.modal-addr {
+		color: #64748b;
+		margin-bottom: 6px
+	}
+
+	.modal-price {
+		font-size: 20px;
+		font-weight: 800;
+		margin-bottom: 10px;
+		color: #0f172a
+	}
+
+	.modal-chips {
+		display: flex;
+		gap: 8px;
+		flex-wrap: wrap;
+		margin-bottom: 10px
+	}
+
+	.modal-chips span {
+		background: #fff7ed;
+		border: 1px solid var(--border);
+		border-radius: 999px;
+		padding: 6px 10px;
+		font-size: 12px
+	}
+
+	.modal-desc {
+		color: #334155;
+		line-height: 1.5;
+		margin-top: 8px;
+		white-space: pre-wrap
+	}
+
+	.agent {
+		display: flex;
+		gap: 12px;
+		align-items: center;
+		margin-top: 16px;
+		padding: 12px;
+		border: 1px solid var(--border);
+		border-radius: 14px;
+		background: #fffdf9
+	}
+
+	.agent-avatar {
+		width: 48px;
+		height: 48px;
+		border-radius: 999px;
+		background: linear-gradient(135deg, #fb923c, #f59e0b);
+		display: grid;
+		place-items: center;
+		color: #0b1320;
+		font-weight: 800
+	}
+
+	.agent-info {
+		flex: 1
+	}
+
+	.agent-actions {
+		display: flex;
+		gap: 8px
+	}
+
+	.agent-actions a {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		background: var(--primary);
+		color: #fff;
+		border-radius: 10px;
+		padding: 10px 12px
+	}
+
+	.agent-actions a.secondary {
+		background: #292524;
+		color: #fff
+	}
+
+	.section-title {
+		font-size: 20px;
+		font-weight: 800;
+		margin: 0 0 12px
+	}
+
+	.mapTwoCol {
+		display: grid;
+		grid-template-columns: 1.2fr .8fr;
+		gap: 16px
+	}
+
+	@media(max-width:900px) {
+		.mapTwoCol {
+			grid-template-columns: 1fr
+		}
+	}
+
+	.map-wrap {
+		border: 1px solid var(--border);
+		border-radius: 16px;
+		overflow: hidden;
+		box-shadow: var(--shadow)
+	}
+
+	#map {
+		height: 420px;
+		width: 100%
+	}
+
+	.contactCard {
+		background: #fff;
+		border: 1px solid var(--border);
+		border-radius: 16px;
+		box-shadow: var(--shadow);
+		padding: 16px;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 12px
+	}
+
+	.contactRow {
+		display: flex;
+		gap: 10px;
+		align-items: flex-start
+	}
+
+	.contactIcon {
+		width: 32px;
+		height: 32px;
+		border-radius: 999px;
+		background: #fff7ed;
+		border: 1px solid #fed7aa;
+		display: grid;
+		place-items: center
+	}
+
+	.contactText strong {
+		display: block
+	}
+
+	.business {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 16px
+	}
+
+	@media(max-width:960px) {
+		.business {
+			grid-template-columns: 1fr
+		}
+	}
+
+	.tile {
+		background: #fff;
+		border: 1px solid var(--border);
+		border-radius: 16px;
+		padding: 16px;
+		box-shadow: var(--shadow)
+	}
+
+	.tile h3 {
+		margin: 0 0 6px;
+		font-size: 18px
+	}
+
+	.tile p {
+		margin: 0;
+		color: #475569
+	}
+
+	footer {
+		margin-top: 36px;
+		background: #fff;
+		border-top: 1px solid var(--border)
+	}
+
+	.footer-inner {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 18px 0;
+		gap: 12px
+	}
+
+	.footer-inner .small {
+		color: #64748b;
+		font-size: 14px
+	}
+
+	.pill {
+		display: inline-flex;
+		gap: 6px;
+		align-items: center;
+		background: #fff7ed;
+		border: 1px solid #fed7aa;
+		color: #7c2d12;
+		border-radius: 999px;
+		padding: 6px 10px;
+		font-size: 12px
+	}
+
+	.hidden {
+		display: none
+	}
+	</style>
+</head>
+
+<body>
+	<header class="header">
+		<div class="container header-inner">
+			<div class="brand">
+				<div class="logo"></div>
+				<h1>Realty</h1>
+			</div>
+			<nav class="nav">
+				<a id="navBrowse" href="#listings">Böngészés</a>
+				<a id="navMap" href="#mapSection">Térkép</a>
+				<a id="navAbout" href="#about">Rólunk</a>
+				<a id="navCTA" class="cta" href="new.html">Hirdesse meg</a>
+				<div class="switchers">
+					<div class="dd" id="ddLang">
+						<div class="dd-btn" id="langBtn"><span class="flag" id="langFlag">🇭🇺</span><span id="langLabel">Magyar</span></div>
+						<div class="dd-menu">
+							<div class="dd-item" data-lang="hu"><span class="flag">🇭🇺</span><span>Magyar</span></div>
+							<div class="dd-item" data-lang="sk"><span class="flag">🇸🇰</span><span>Slovenčina</span></div>
+						</div>
+					</div>
+					<div class="dd" id="ddCur">
+						<div class="dd-btn" id="curBtn"><span class="flag" id="curFlag">Ft</span><span id="curLabel">HUF</span></div>
+						<div class="dd-menu">
+							<div class="dd-item" data-cur="HUF"><span class="flag">Ft</span><span>HUF</span></div>
+							<div class="dd-item" data-cur="EUR"><span class="flag">€</span><span>EUR</span></div>
+						</div>
+					</div>
+				</div>
+			</nav>
+		</div>
+	</header>
+	<section class="hero">
+		<div class="container inner">
+			<div>
+				<h2 class="headline" id="heroHeadline">Találd meg új otthonod</h2>
+				<p class="sub" id="heroSub">Válogatott ingatlanok egy helyen. Keress, szűrj és fedezd fel a lehetőségeket.</p>
+				<div class="searchbar">
+					<input id="heroSearch" placeholder="Keresés városra, címre vagy kulcsszóra">
+					<select id="heroType">
+						<option value="">Bármilyen típus</option>
+						<option>House</option>
+						<option>Apartment</option>
+						<option>Condo</option>
+						<option>Townhouse</option>
+						<option>Land</option>
+					</select>
+					<select id="heroBeds">
+						<option value="">Hálószobák</option>
+						<option value="1">1+</option>
+						<option value="2">2+</option>
+						<option value="3">3+</option>
+						<option value="4">4+</option>
+						<option value="5">5+</option>
+					</select>
+					<button id="heroGo">Keresés</button>
+				</div>
+			</div>
+			<div class="hero-visual">
+				<div class="hero-card">
+					<div class="hero-media"></div>
+					<div class="hero-body">
+						<div class="hero-title" id="heroTeaserTitle">Napfényes modern otthon</div>
+						<div class="hero-specs">
+							<span id="heroTeaserBeds">3 háló</span><span id="heroTeaserBaths">2 fürdő</span><span id="heroTeaserArea">172 m²</span><span class="pill" id="heroTeaserPrice">139 000 000 Ft</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<div class="controls">
+		<div class="container bar">
+			<input id="q" class="grow" placeholder="Keresés a találatok között">
+			<select id="filterType">
+				<option value="">Összes típus</option>
+				<option>House</option>
+				<option>Apartment</option>
+				<option>Condo</option>
+				<option>Townhouse</option>
+				<option>Land</option>
+			</select>
+			<select id="minBeds">
+				<option value="">Min. háló</option>
+				<option value="1">1+</option>
+				<option value="2">2+</option>
+				<option value="3">3+</option>
+				<option value="4">4+</option>
+				<option value="5">5+</option>
+			</select>
+			<select id="minBaths">
+				<option value="">Min. fürdő</option>
+				<option value="1">1+</option>
+				<option value="2">2+</option>
+				<option value="3">3+</option>
+				<option value="4">4+</option>
+			</select>
+			<input id="minPrice" type="number" min="0" placeholder="Min. ár">
+			<input id="maxPrice" type="number" min="0" placeholder="Max. ár">
+			<select id="sortBy">
+				<option value="date_desc">Legújabb</option>
+				<option value="date_asc">Legrégebbi</option>
+				<option value="price_asc">Ár ↑</option>
+				<option value="price_desc">Ár ↓</option>
+				<option value="area_desc">Alapterület ↓</option>
+				<option value="area_asc">Alapterület ↑</option>
+			</select>
+			<button id="clearFilters" class="btn">Szűrők törlése</button>
+		</div>
+	</div>
+	<section id="listings" class="section">
+		<div class="container">
+			<div class="results-head">
+				<div id="resultCount">Találatok betöltése…</div>
+				<div id="activeFilters" class="pill hidden"></div>
+			</div>
+			<div id="grid" class="grid"></div>
+		</div>
+	</section>
+	<section id="mapSection" class="section">
+		<div class="container">
+			<h3 class="section-title" id="mapTitle">Irodánk elérhetőségei</h3>
+			<div class="mapTwoCol">
+				<div class="map-wrap">
+					<div id="map"></div>
+				</div>
+				<div class="contactCard">
+					<div class="contactRow">
+						<div class="contactIcon">📍</div>
+						<div class="contactText">
+							<strong id="lblAddress">Cím</strong>
+							<div id="contactAddress">Magyar utca, Mosonmagyaróvár, Magyarország</div>
+						</div>
+					</div>
+					<div class="contactRow">
+						<div class="contactIcon">⏰</div>
+						<div class="contactText">
+							<strong id="lblHours">Nyitvatartás</strong>
+							<div id="contactHours"> Hétfő–Péntek: 9:00–17:00<br>Szombat: 10:00–14:00<br>Vasárnap: zárva </div>
+						</div>
+					</div>
+					<div class="contactRow">
+						<div class="contactIcon">📱</div>
+						<div class="contactText">
+							<strong id="lblMobile">Mobil</strong>
+							<div><a href="tel:+36301234567" id="contactMobile">+36 30 123 4567</a></div>
+						</div>
+					</div>
+					<div class="contactRow">
+						<div class="contactIcon">✉️</div>
+						<div class="contactText">
+							<strong id="lblEmail">E-mail</strong>
+							<div><a href="mailto:hello@realty.example" id="contactEmail">hello@realty.example</a></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section id="about" class="section">
+		<div class="container">
+			<h3 class="section-title" id="aboutTitle">Miért a Realty</h3>
+			<div class="business">
+				<div class="tile">
+					<h3 id="tile1h">Helyismeret</h3>
+					<p id="tile1p">Ügynökeink jól ismerik a környékeket és naprakész piaci tudással segítenek.</p>
+				</div>
+				<div class="tile">
+					<h3 id="tile2h">Átlátható folyamat</h3>
+					<p id="tile2p">Böngésszen, hasonlítson és foglaljon megtekintéseket egyszerűen és átláthatóan.</p>
+				</div>
+				<div class="tile">
+					<h3 id="tile3h">Teljes körű támogatás</h3>
+					<p id="tile3p">A felfedezéstől a szerződésig végigkísérjük, hogy magabiztosan dönthessen.</p>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer>
+		<div class="container footer-inner">
+			<div class="brand" style="gap:8px">
+				<div class="logo" style="width:26px;height:26px"></div><strong>Realty</strong>
+			</div>
+			<div class="small">© <span id="year"></span> Realty. Minden jog fenntartva.</div>
+			<div class="pill" id="footerMail">hello@realty.example</div>
+		</div>
+	</footer>
+	<div id="modal" class="modal">
+		<div class="modal-card">
+			<div class="modal-media">
+				<div class="carousel" id="modalCarousel">
+					<div class="badge" id="modalType"></div>
+					<div class="price modal-price" id="modalPrice"></div>
+					<div class="nav">
+						<button id="modalPrev" aria-label="Előző">
+							<svg width="18" height="18" viewBox="0 0 24 24">
+								<path d="M15 18l-6-6 6-6" stroke="#111" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" /></svg>
+						</button>
+						<button id="modalNext" aria-label="Következő">
+							<svg width="18" height="18" viewBox="0 0 24 24">
+								<path d="M9 6l6 6-6 6" stroke="#111" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" /></svg>
+						</button>
+					</div>
+				</div>
+			</div>
+			<div class="modal-body">
+				<h3 id="modalTitle" class="modal-title"></h3>
+				<div id="modalAddr" class="modal-addr"></div>
+				<div class="modal-chips" id="modalChips"></div>
+				<div id="modalDesc" class="modal-desc"></div>
+				<div class="agent">
+					<div class="agent-avatar" id="agentAvatar">AJ</div>
+					<div class="agent-info">
+						<div style="font-weight:700" id="agentName">Alex Johnson</div>
+						<div class="muted" id="agentRole" style="color:#64748b">Ingatlanügynök</div>
+					</div>
+					<div class="agent-actions">
+						<a id="ctaCall" href="tel:+15551234567">
+							<svg width="16" height="16" viewBox="0 0 24 24">
+								<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.75 19.75 0 0 1-8.63-3.07 19.38 19.38 0 0 1-6-6A19.75 19.75 0 0 1 2.08 4.18 2 2 0 0 1 4.06 2h3a2 2 0 0 1 2 1.72c.12.89.34 1.76.65 2.59a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.49-1.17a2 2 0 0 1 2.11-.45c.83.31 1.7.53 2.59.65A2 2 0 0 1 22 16.92z" fill="#fff" /></svg> Hívja most </a>
+						<a id="ctaEmail" class="secondary" href="mailto:hello@realty.example?subject=Érdeklődés">
+							<svg width="16" height="16" viewBox="0 0 24 24">
+								<path d="M4 4h16v16H4z" fill="none" stroke="#fff" stroke-width="2" />
+								<path d="M22 6l-10 7L2 6" fill="none" stroke="#fff" stroke-width="2" /></svg> E-mail küldése </a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+	<script>
+	const BIN_ID = '68add1c9ae596e708fd72498'
+	const MASTER_KEY = '$2a$10$9sO/ja29sMebpWNvsWmp5.dJ6lv7CPeLBMRFaA/cAEwz42ii6qlCS'
+	const BASE_URL = 'https://api.jsonbin.io/v3/b/' + BIN_ID
+	const EUR_TO_HUF = 390
+	const BUSINESS_ADDRESS = 'Magyar utca, Mosonmagyaróvár, Hungary'
+	const FALLBACK_LAT = 47.8712
+	const FALLBACK_LNG = 17.2719
+	const state = {
+		listings: [],
+		filtered: [],
+		carouselIndex: {},
+		map: null,
+		markers: [],
+		geoCache: new Map(),
+		modal: {
+			id: null,
+			idx: 0
+		},
+		lang: 'hu',
+		currency: 'HUF'
+	}
+	const els = {
+		navBrowse: document.getElementById('navBrowse'),
+		navMap: document.getElementById('navMap'),
+		navAbout: document.getElementById('navAbout'),
+		navCTA: document.getElementById('navCTA'),
+		heroHeadline: document.getElementById('heroHeadline'),
+		heroSub: document.getElementById('heroSub'),
+		heroSearch: document.getElementById('heroSearch'),
+		heroType: document.getElementById('heroType'),
+		heroBeds: document.getElementById('heroBeds'),
+		heroGo: document.getElementById('heroGo'),
+		heroTeaserTitle: document.getElementById('heroTeaserTitle'),
+		heroTeaserBeds: document.getElementById('heroTeaserBeds'),
+		heroTeaserBaths: document.getElementById('heroTeaserBaths'),
+		heroTeaserArea: document.getElementById('heroTeaserArea'),
+		heroTeaserPrice: document.getElementById('heroTeaserPrice'),
+		q: document.getElementById('q'),
+		filterType: document.getElementById('filterType'),
+		minBeds: document.getElementById('minBeds'),
+		minBaths: document.getElementById('minBaths'),
+		minPrice: document.getElementById('minPrice'),
+		maxPrice: document.getElementById('maxPrice'),
+		sortBy: document.getElementById('sortBy'),
+		clear: document.getElementById('clearFilters'),
+		grid: document.getElementById('grid'),
+		resultCount: document.getElementById('resultCount'),
+		activeFilters: document.getElementById('activeFilters'),
+		mapTitle: document.getElementById('mapTitle'),
+		aboutTitle: document.getElementById('aboutTitle'),
+		tile1h: document.getElementById('tile1h'),
+		tile1p: document.getElementById('tile1p'),
+		tile2h: document.getElementById('tile2h'),
+		tile2p: document.getElementById('tile2p'),
+		tile3h: document.getElementById('tile3h'),
+		tile3p: document.getElementById('tile3p'),
+		footerMail: document.getElementById('footerMail'),
+		modal: document.getElementById('modal'),
+		modalCarousel: document.getElementById('modalCarousel'),
+		modalPrev: document.getElementById('modalPrev'),
+		modalNext: document.getElementById('modalNext'),
+		modalType: document.getElementById('modalType'),
+		modalPrice: document.getElementById('modalPrice'),
+		modalTitle: document.getElementById('modalTitle'),
+		modalAddr: document.getElementById('modalAddr'),
+		modalChips: document.getElementById('modalChips'),
+		modalDesc: document.getElementById('modalDesc'),
+		agentName: document.getElementById('agentName'),
+		agentRole: document.getElementById('agentRole'),
+		ctaCall: document.getElementById('ctaCall'),
+		ctaEmail: document.getElementById('ctaEmail'),
+		ddLang: document.getElementById('ddLang'),
+		ddCur: document.getElementById('ddCur'),
+		langBtn: document.getElementById('langBtn'),
+		curBtn: document.getElementById('curBtn'),
+		langFlag: document.getElementById('langFlag'),
+		langLabel: document.getElementById('langLabel'),
+		curFlag: document.getElementById('curFlag'),
+		curLabel: document.getElementById('curLabel'),
+		lblAddress: document.getElementById('lblAddress'),
+		lblHours: document.getElementById('lblHours'),
+		lblMobile: document.getElementById('lblMobile'),
+		lblEmail: document.getElementById('lblEmail'),
+		contactAddress: document.getElementById('contactAddress'),
+		contactHours: document.getElementById('contactHours')
+	}
+	document.getElementById('year').textContent = new Date().getFullYear()
+	const i18n = {
+		hu: {
+			navBrowse: 'Böngészés',
+			navMap: 'Térkép',
+			navAbout: 'Rólunk',
+			navCTA: 'Hirdesse meg',
+			heroHeadline: 'Találd meg új otthonod',
+			heroSub: 'Válogatott ingatlanok egy helyen. Keress, szűrj és fedezd fel a lehetőségeket.',
+			heroSearch: 'Keresés városra, címre vagy kulcsszóra',
+			heroTypeAny: 'Bármilyen típus',
+			heroBeds: 'Hálószobák',
+			heroGo: 'Keresés',
+			searchPlaceholder: 'Keresés a találatok között',
+			allTypes: 'Összes típus',
+			minBeds: 'Min. háló',
+			minBaths: 'Min. fürdő',
+			minPrice: 'Min. ár',
+			maxPrice: 'Max. ár',
+			sortNewest: 'Legújabb',
+			sortOldest: 'Legrégebbi',
+			sortPriceAsc: 'Ár ↑',
+			sortPriceDesc: 'Ár ↓',
+			sortAreaDesc: 'Alapterület ↓',
+			sortAreaAsc: 'Alapterület ↑',
+			clear: 'Szűrők törlése',
+			resultCount: n => n ? `${n} találat` : 'Nincs találat a szűrőkre',
+			activeMin: 'min',
+			activeMax: 'max',
+			bdLabelShort: 'háló',
+			baLabelShort: 'fürdő',
+			m2: 'm²',
+			mapTitle: 'Irodánk elérhetőségei',
+			aboutTitle: 'Miért a Realty',
+			tile1h: 'Helyismeret',
+			tile1p: 'Ügynökeink jól ismerik a környékeket és naprakész piaci tudással segítenek.',
+			tile2h: 'Átlátható folyamat',
+			tile2p: 'Böngésszen, hasonlítson és foglaljon megtekintéseket egyszerűen és átláthatóan.',
+			tile3h: 'Teljes körű támogatás',
+			tile3p: 'A felfedezéstől a szerződésig végigkísérjük, hogy magabiztosan dönthessen.',
+			footerRights: n => '© ' + n + ' Realty. Minden jog fenntartva.',
+			agentRole: 'Ingatlanügynök',
+			callNow: 'Hívja most',
+			emailAgent: 'E-mail küldése',
+			contactAddress: 'Cím',
+			contactHours: 'Nyitvatartás',
+			contactMobile: 'Mobil',
+			contactEmail: 'E-mail',
+			businessHours: 'Hétfő–Péntek: 9:00–17:00\nSzombat: 10:00–14:00\nVasárnap: zárva',
+			langLabel: 'Magyar',
+			langFlag: '🇭🇺',
+			curLabelHUF: 'HUF',
+			curLabelEUR: 'EUR',
+			curFlagHUF: 'Ft',
+			curFlagEUR: '€'
+		},
+		sk: {
+			navBrowse: 'Ponuky',
+			navMap: 'Mapa',
+			navAbout: 'O nás',
+			navCTA: 'Pridať inzerát',
+			heroHeadline: 'Nájdite svoj nový domov',
+			heroSub: 'Vyberané nehnuteľnosti na jednom mieste. Hľadajte, filtrujte a objavujte.',
+			heroSearch: 'Hľadať podľa mesta, adresy alebo kľúčového slova',
+			heroTypeAny: 'Akýkoľvek typ',
+			heroBeds: 'Spálne',
+			heroGo: 'Hľadať',
+			searchPlaceholder: 'Hľadať v ponukách',
+			allTypes: 'Všetky typy',
+			minBeds: 'Min. izby',
+			minBaths: 'Min. kúpeľne',
+			minPrice: 'Min. cena',
+			maxPrice: 'Max. cena',
+			sortNewest: 'Najnovšie',
+			sortOldest: 'Najstaršie',
+			sortPriceAsc: 'Cena ↑',
+			sortPriceDesc: 'Cena ↓',
+			sortAreaDesc: 'Plocha ↓',
+			sortAreaAsc: 'Plocha ↑',
+			clear: 'Vymazať filtre',
+			resultCount: n => n ? `${n} ponúk` : 'Žiadne ponuky nespĺňajú filtre',
+			activeMin: 'min',
+			activeMax: 'max',
+			bdLabelShort: 'izba',
+			baLabelShort: 'kúpeľňa',
+			m2: 'm²',
+			mapTitle: 'Naše kontakty',
+			aboutTitle: 'Prečo Realty',
+			tile1h: 'Lokálne znalosti',
+			tile1p: 'Naši agenti poznajú štvrte a prinášajú aktuálne informácie o trhu.',
+			tile2h: 'Transparentný proces',
+			tile2p: 'Prehliadajte, porovnávajte a rezervujte si obhliadky jednoducho a prehľadne.',
+			tile3h: 'Komplexná podpora',
+			tile3p: 'Od vyhľadávania až po podpis zmluvy sme s vami pri každom kroku.',
+			footerRights: n => '© ' + n + ' Realty. Všetky práva vyhradené.',
+			agentRole: 'Realitný maklér',
+			callNow: 'Zavolať teraz',
+			emailAgent: 'Napísať e‑mail',
+			contactAddress: 'Adresa',
+			contactHours: 'Otváracie hodiny',
+			contactMobile: 'Mobil',
+			contactEmail: 'E‑mail',
+			businessHours: 'Pondelok–Piatok: 9:00–17:00\nSobota: 10:00–14:00\nNedeľa: zatvorené',
+			langLabel: 'Slovenčina',
+			langFlag: '🇸🇰',
+			curLabelHUF: 'HUF',
+			curLabelEUR: 'EUR',
+			curFlagHUF: 'Ft',
+			curFlagEUR: '€'
+		}
+	}
+
+	function t(key, ...args) {
+		const d = i18n[state.lang];
+		const v = d[key];
+		return typeof v === 'function' ? v(...args) : v
+	}
+
+	function fmtMoneyEUR(e) {
+		return new Intl.NumberFormat(state.lang === 'hu' ? 'hu-HU' : 'sk-SK', {
+			style: 'currency',
+			currency: 'EUR',
+			maximumFractionDigits: 0
+		}).format(e)
+	}
+
+	function fmtMoneyHUF(h) {
+		return new Intl.NumberFormat('hu-HU', {
+			style: 'currency',
+			currency: 'HUF',
+			maximumFractionDigits: 0
+		}).format(h)
+	}
+
+	function fmtPriceFromEUR(eur) {
+		if(state.currency === 'EUR') return fmtMoneyEUR(eur || 0)
+		return fmtMoneyHUF(Math.round((eur || 0) * EUR_TO_HUF))
+	}
+
+	function placeholder() {
+		const svg = encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fff3e5"/><stop offset="100%" stop-color="#ffe8cc"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g)"/></svg>');
+		return 'data:image/svg+xml;charset=utf-8,' + svg
+	}
+
+	function sqftToM2(sq) {
+		const m2 = (Number(sq || 0) * 0.092903);
+		return Math.round(m2)
+	}
+
+	function normalize(x) {
+		const y = {
+			...x
+		}
+		const title = y.title || y.heading || ''
+		const description = y.description || y.additionalDetails || ''
+		let price = y.price
+		if(price == null && y.data) {
+			const m = String(y.data).match(/[\d,]+/);
+			if(m) price = Number(m[0].replace(/,/g, ''))
+		}
+		const id = y.id || Math.random().toString(36).slice(2)
+		const propertyType = y.propertyType || y.type || ''
+		const photos = Array.isArray(y.photos) && y.photos.length ? y.photos : [placeholder()]
+		const m2 = sqftToM2(y.area || 0)
+		return {
+			id,
+			title,
+			description,
+			priceEUR: Number(price || 0),
+			propertyType,
+			bedrooms: Number(y.bedrooms || 0),
+			bathrooms: Number(y.bathrooms || 0),
+			areaM2: m2,
+			address: y.address || '',
+			city: y.city || '',
+			state: y.state || '',
+			photos,
+			createdAt: y.createdAt || new Date().toISOString()
+		}
+	}
+	async function fetchListings() {
+		const r = await fetch(BASE_URL + '/latest', {
+			headers: {
+				'X-Master-Key': MASTER_KEY,
+				'Content-Type': 'application/json'
+			}
+		})
+		if(!r.ok) {
+			if(r.status === 404) return [];
+			throw new Error('Failed')
+		}
+		const j = await r.json()
+		return Array.isArray(j.record) ? j.record : []
+	}
+
+	function applyFilters() {
+		const term = (els.q.value || '').trim().toLowerCase()
+		const type = els.filterType.value
+		const minBeds = Number(els.minBeds.value || 0)
+		const minBaths = Number(els.minBaths.value || 0)
+		const minPriceRaw = Number(els.minPrice.value || 0)
+		const maxPriceRaw = Number(els.maxPrice.value || 0)
+		const sort = els.sortBy.value
+		let arr = [...state.listings]
+		if(term) {
+			arr = arr.filter(it => (it.title + ' ' + it.description + ' ' + it.address + ' ' + it.city + ' ' + it.state).toLowerCase().includes(term))
+		}
+		if(type) {
+			arr = arr.filter(it => it.propertyType === type)
+		}
+		if(minBeds) {
+			arr = arr.filter(it => (it.bedrooms || 0) >= minBeds)
+		}
+		if(minBaths) {
+			arr = arr.filter(it => (it.bathrooms || 0) >= minBaths)
+		}
+		if(minPriceRaw) {
+			const minEUR = state.currency === 'EUR' ? minPriceRaw : minPriceRaw / EUR_TO_HUF;
+			arr = arr.filter(it => (it.priceEUR || 0) >= minEUR)
+		}
+		if(maxPriceRaw) {
+			const maxEUR = state.currency === 'EUR' ? maxPriceRaw : maxPriceRaw / EUR_TO_HUF;
+			arr = arr.filter(it => (it.priceEUR || 0) <= maxEUR)
+		}
+		if(sort === 'price_asc') arr.sort((a, b) => (a.priceEUR || 0) - (b.priceEUR || 0))
+		if(sort === 'price_desc') arr.sort((a, b) => (b.priceEUR || 0) - (a.priceEUR || 0))
+		if(sort === 'date_asc') arr.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+		if(sort === 'date_desc') arr.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+		if(sort === 'area_desc') arr.sort((a, b) => (b.areaM2 || 0) - (a.areaM2 || 0))
+		if(sort === 'area_asc') arr.sort((a, b) => (a.areaM2 || 0) - (b.areaM2 || 0))
+		state.filtered = arr
+		const active = []
+		if(type) active.push(type)
+		if(minBeds) active.push(minBeds + '+ ' + t('bdLabelShort'))
+		if(minBaths) active.push(minBaths + '+ ' + t('baLabelShort'))
+		if(minPriceRaw) active.push(t('activeMin') + ' ' + (state.currency === 'EUR' ? fmtMoneyEUR(minPriceRaw) : fmtMoneyHUF(minPriceRaw)))
+		if(maxPriceRaw) active.push(t('activeMax') + ' ' + (state.currency === 'EUR' ? fmtMoneyEUR(maxPriceRaw) : fmtMoneyHUF(maxPriceRaw)))
+		if(term) active.push('“' + term + '”')
+		if(active.length) {
+			els.activeFilters.textContent = active.join(' • ');
+			els.activeFilters.classList.remove('hidden')
+		} else {
+			els.activeFilters.classList.add('hidden')
+		}
+		renderGrid()
+		updateMapMarkers()
+	}
+
+	function setResultCount() {
+		const n = state.filtered.length
+		els.resultCount.textContent = t('resultCount', n)
+	}
+
+	function renderSkeleton(count = 6) {
+		els.grid.innerHTML = ''
+		for(let i = 0; i < count; i++) {
+			const c = document.createElement('div');
+			c.className = 'card'
+			const m = document.createElement('div');
+			m.className = 'carousel skeleton';
+			m.style.height = '220px'
+			const b = document.createElement('div');
+			b.className = 'body'
+			const t1 = document.createElement('div');
+			t1.className = 'skeleton';
+			t1.style.height = '18px';
+			t1.style.borderRadius = '8px'
+			t1.style.margin = '6px 0'
+			const r = document.createElement('div');
+			r.className = 'skeleton';
+			r.style.height = '12px';
+			r.style.borderRadius = '8px'
+			r.style.width = '60%'
+			b.appendChild(t1);
+			b.appendChild(r)
+			c.appendChild(m);
+			c.appendChild(b)
+			els.grid.appendChild(c)
+		}
+	}
+
+	function attachCarousel(card, photos, id) {
+		let idx = state.carouselIndex[id] || 0
+		const img = document.createElement('img')
+		img.loading = 'lazy'
+		img.src = photos[idx] || placeholder()
+		const nav = document.createElement('div');
+		nav.className = 'nav'
+		const prev = document.createElement('button')
+		prev.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke="#111" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+		const next = document.createElement('button')
+		next.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" stroke="#111" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+		prev.addEventListener('click', e => {
+			e.stopPropagation();
+			idx = (idx - 1 + photos.length) % photos.length;
+			img.src = photos[idx];
+			state.carouselIndex[id] = idx
+		})
+		next.addEventListener('click', e => {
+			e.stopPropagation();
+			idx = (idx + 1) % photos.length;
+			img.src = photos[idx];
+			state.carouselIndex[id] = idx
+		})
+		nav.appendChild(prev);
+		nav.appendChild(next)
+		card.appendChild(img);
+		card.appendChild(nav)
+	}
+
+	function renderGrid() {
+		els.grid.innerHTML = ''
+		setResultCount()
+		state.filtered.forEach(item => {
+			const card = document.createElement('div');
+			card.className = 'card';
+			card.tabIndex = 0
+			const carousel = document.createElement('div');
+			carousel.className = 'carousel'
+			const badge = document.createElement('div');
+			badge.className = 'badge';
+			badge.textContent = item.propertyType || '—'
+			const price = document.createElement('div');
+			price.className = 'price';
+			price.textContent = fmtPriceFromEUR(item.priceEUR || 0)
+			carousel.appendChild(badge);
+			carousel.appendChild(price)
+			attachCarousel(carousel, item.photos, item.id)
+			const body = document.createElement('div');
+			body.className = 'body'
+			const title = document.createElement('h4');
+			title.className = 'title';
+			title.textContent = item.title || ''
+			const addr = document.createElement('div');
+			addr.className = 'addr';
+			addr.textContent = [item.address, item.city, item.state].filter(Boolean).join(', ')
+			const specs = document.createElement('div');
+			specs.className = 'specs'
+			const s1 = document.createElement('span');
+			s1.textContent = (item.bedrooms || 0) + ' ' + t('bdLabelShort')
+			const s2 = document.createElement('span');
+			s2.textContent = (item.bathrooms || 0) + ' ' + t('baLabelShort')
+			const s3 = document.createElement('span');
+			s3.textContent = (item.areaM2 || 0) + ' ' + t('m2')
+			specs.appendChild(s1);
+			specs.appendChild(s2);
+			specs.appendChild(s3)
+			body.appendChild(title);
+			body.appendChild(addr);
+			body.appendChild(specs)
+			card.appendChild(carousel);
+			card.appendChild(body)
+			card.addEventListener('click', () => openModal(item))
+			card.addEventListener('keydown', e => {
+				if(e.key === 'Enter') openModal(item)
+			})
+			els.grid.appendChild(card)
+		})
+	}
+
+	function openModal(item) {
+		state.modal.id = item.id
+		state.modal.idx = 0
+		els.modalType.textContent = item.propertyType || '—'
+		els.modalPrice.textContent = fmtPriceFromEUR(item.priceEUR || 0)
+		els.modalTitle.textContent = item.title || ''
+		els.modalAddr.textContent = [item.address, item.city, item.state].filter(Boolean).join(', ')
+		els.modalChips.innerHTML = '';
+		[(item.bedrooms || 0) + ' ' + t('bdLabelShort'), (item.bathrooms || 0) + ' ' + t('baLabelShort'), (item.areaM2 || 0) + ' ' + t('m2')].forEach(tx => {
+			const s = document.createElement('span');
+			s.textContent = tx;
+			els.modalChips.appendChild(s)
+		})
+		els.modalDesc.textContent = item.description || ''
+		renderModalImage(item)
+		els.modal.classList.add('open')
+		document.body.style.overflow = 'hidden'
+		els.modal.onclick = (e) => {
+			if(e.target === els.modal) {
+				closeModal()
+			}
+		}
+		document.onkeydown = (e) => {
+			if(e.key === 'Escape') closeModal()
+		}
+		els.modalPrev.onclick = (e) => {
+			e.stopPropagation();
+			state.modal.idx = (state.modal.idx - 1 + item.photos.length) % item.photos.length;
+			renderModalImage(item)
+		}
+		els.modalNext.onclick = (e) => {
+			e.stopPropagation();
+			state.modal.idx = (state.modal.idx + 1) % item.photos.length;
+			renderModalImage(item)
+		}
+		els.agentRole.textContent = t('agentRole')
+		els.ctaCall.lastChild.textContent = ' ' + t('callNow')
+		const emailLink = els.ctaEmail;
+		emailLink.lastChild.textContent = ' ' + t('emailAgent')
+	}
+
+	function closeModal() {
+		els.modal.classList.remove('open');
+		document.body.style.overflow = '';
+		document.onkeydown = null
+	}
+
+	function renderModalImage(item) {
+		els.modalCarousel.querySelectorAll('img').forEach(n => n.remove())
+		const img = document.createElement('img')
+		img.src = item.photos[state.modal.idx] || placeholder()
+		img.style.objectFit = 'cover'
+		els.modalCarousel.insertBefore(img, els.modalCarousel.querySelector('.nav'))
+	}
+
+	function setupMap() {
+		state.map = L.map('map', {
+			scrollWheelZoom: false
+		}).setView([FALLBACK_LAT, FALLBACK_LNG], 15)
+		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			attribution: '© OpenStreetMap'
+		}).addTo(state.map)
+		placeBusinessMarker()
+	}
+	async function placeBusinessMarker() {
+		try {
+			const loc = await geocode(BUSINESS_ADDRESS)
+			const lat = (loc && loc.lat) || FALLBACK_LAT
+			const lng = (loc && loc.lng) || FALLBACK_LNG
+			state.map.setView([lat, lng], 16)
+			const m = L.marker([lat, lng]).addTo(state.map)
+			m.bindPopup('Realty<br>' + escapeHtml(BUSINESS_ADDRESS))
+		} catch (e) {
+			const m = L.marker([FALLBACK_LAT, FALLBACK_LNG]).addTo(state.map)
+			m.bindPopup('Realty<br>' + escapeHtml(BUSINESS_ADDRESS))
+		}
+	}
+
+	function sleep(ms) {
+		return new Promise(r => setTimeout(r, ms))
+	}
+	async function geocode(addr) {
+		const key = addr.trim().toLowerCase()
+		if(state.geoCache.has(key)) return state.geoCache.get(key)
+		const url = 'https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(addr)
+		const r = await fetch(url, {
+			headers: {
+				'Accept': 'application/json'
+			}
+		})
+		if(!r.ok) throw new Error('geo')
+		const j = await r.json()
+		const loc = j && j[0] ? {
+			lat: parseFloat(j[0].lat),
+			lng: parseFloat(j[0].lon)
+		} : null
+		state.geoCache.set(key, loc)
+		return loc
+	}
+	async function updateMapMarkers() {
+		if(!state.map) return
+		state.markers.forEach(m => state.map.removeLayer(m))
+		state.markers = []
+		const list = state.filtered.slice(0, 20)
+		let bounds = []
+		for(const item of list) {
+			const addr = [item.address, item.city, item.state].filter(Boolean).join(', ')
+			if(!addr) continue
+			try {
+				const loc = await geocode(addr)
+				if(!loc) continue
+				const m = L.marker([loc.lat, loc.lng]).addTo(state.map)
+				m.bindPopup('<strong>' + escapeHtml(item.title || '') + '</strong><br>' + escapeHtml(addr) + '<br>' + escapeHtml(fmtPriceFromEUR(item.priceEUR || 0)))
+				state.markers.push(m)
+				bounds.push([loc.lat, loc.lng])
+				await sleep(250)
+			} catch (e) {}
+		}
+	}
+
+	function escapeHtml(s) {
+		return String(s).replace(/[&<>"']/g, m => ({
+			'&': '&amp;',
+			'<': '&lt;',
+			'>': '&gt;',
+			'"': '&quot;',
+			"'": '&#039;'
+		})[m])
+	}
+
+	function bindControls() {
+		;
+		[els.q, els.filterType, els.minBeds, els.minBaths, els.minPrice, els.maxPrice, els.sortBy].forEach(el => el.addEventListener('input', applyFilters))
+		els.clear.addEventListener('click', () => {
+			els.q.value = '';
+			els.filterType.value = '';
+			els.minBeds.value = '';
+			els.minBaths.value = '';
+			els.minPrice.value = '';
+			els.maxPrice.value = '';
+			els.sortBy.value = 'date_desc';
+			applyFilters()
+		})
+		els.heroGo.addEventListener('click', () => {
+			els.q.value = els.heroSearch.value
+			els.filterType.value = els.heroType.value
+			els.minBeds.value = els.heroBeds.value
+			document.querySelector('.controls').scrollIntoView({
+				behavior: 'smooth'
+			})
+			applyFilters()
+		})
+		document.addEventListener('click', e => {
+			if(!els.ddLang.contains(e.target)) els.ddLang.classList.remove('open')
+			if(!els.ddCur.contains(e.target)) els.ddCur.classList.remove('open')
+		})
+		els.langBtn.addEventListener('click', () => {
+			els.ddLang.classList.toggle('open')
+		})
+		els.curBtn.addEventListener('click', () => {
+			els.ddCur.classList.toggle('open')
+		})
+		els.ddLang.querySelectorAll('.dd-item').forEach(it => it.addEventListener('click', () => {
+			setLang(it.getAttribute('data-lang'));
+			els.ddLang.classList.remove('open')
+		}))
+		els.ddCur.querySelectorAll('.dd-item').forEach(it => it.addEventListener('click', () => {
+			setCurrency(it.getAttribute('data-cur'));
+			els.ddCur.classList.remove('open')
+		}))
+	}
+
+	function applyLanguage() {
+		els.navBrowse.textContent = t('navBrowse')
+		els.navMap.textContent = t('navMap')
+		els.navAbout.textContent = t('navAbout')
+		els.navCTA.textContent = t('navCTA')
+		els.heroHeadline.textContent = t('heroHeadline')
+		els.heroSub.textContent = t('heroSub')
+		els.heroSearch.placeholder = t('heroSearch')
+		els.heroType.options[0].text = t('heroTypeAny')
+		els.heroBeds.options[0].text = t('heroBeds')
+		els.heroGo.textContent = t('heroGo')
+		els.q.placeholder = t('searchPlaceholder')
+		els.filterType.options[0].text = t('allTypes')
+		els.minBeds.options[0].text = t('minBeds')
+		els.minBaths.options[0].text = t('minBaths')
+		els.minPrice.placeholder = t('minPrice')
+		els.maxPrice.placeholder = t('maxPrice')
+		const opts = els.sortBy.options
+		for(let i = 0; i < opts.length; i++) {
+			if(opts[i].value === 'date_desc') opts[i].text = t('sortNewest')
+			if(opts[i].value === 'date_asc') opts[i].text = t('sortOldest')
+			if(opts[i].value === 'price_asc') opts[i].text = t('sortPriceAsc')
+			if(opts[i].value === 'price_desc') opts[i].text = t('sortPriceDesc')
+			if(opts[i].value === 'area_desc') opts[i].text = t('sortAreaDesc')
+			if(opts[i].value === 'area_asc') opts[i].text = t('sortAreaAsc')
+		}
+		document.querySelector('.footer-inner .small').textContent = t('footerRights', new Date().getFullYear())
+		els.mapTitle.textContent = t('mapTitle')
+		els.aboutTitle.textContent = t('aboutTitle')
+		els.tile1h.textContent = t('tile1h');
+		els.tile1p.textContent = t('tile1p')
+		els.tile2h.textContent = t('tile2h');
+		els.tile2p.textContent = t('tile2p')
+		els.tile3h.textContent = t('tile3h');
+		els.tile3p.textContent = t('tile3p')
+		els.agentRole.textContent = t('agentRole')
+		els.ctaCall.lastChild.textContent = ' ' + t('callNow')
+		els.ctaEmail.lastChild.textContent = ' ' + t('emailAgent')
+		els.lblAddress.textContent = t('contactAddress')
+		els.lblHours.textContent = t('contactHours')
+		els.lblMobile.textContent = t('contactMobile')
+		els.lblEmail.textContent = t('contactEmail')
+		els.contactHours.innerHTML = t('businessHours').replace(/\n/g, '<br>')
+		updateSwitchUI()
+	}
+
+	function updateSwitchUI() {
+		if(state.lang === 'hu') {
+			els.langFlag.textContent = i18n.hu.langFlag;
+			els.langLabel.textContent = i18n.hu.langLabel
+		} else {
+			els.langFlag.textContent = i18n.sk.langFlag;
+			els.langLabel.textContent = i18n.sk.langLabel
+		}
+		if(state.currency === 'HUF') {
+			els.curFlag.textContent = i18n[state.lang].curFlagHUF;
+			els.curLabel.textContent = i18n[state.lang].curLabelHUF
+		} else {
+			els.curFlag.textContent = i18n[state.lang].curFlagEUR;
+			els.curLabel.textContent = i18n[state.lang].curLabelEUR
+		}
+	}
+
+	function renderTeaser() {
+		const priceEUR = 350000
+		els.heroTeaserBeds.textContent = '3 ' + t('bdLabelShort')
+		els.heroTeaserBaths.textContent = '2 ' + t('baLabelShort')
+		els.heroTeaserArea.textContent = '172 ' + t('m2')
+		els.heroTeaserPrice.textContent = fmtPriceFromEUR(priceEUR)
+	}
+
+	function setLang(lang) {
+		state.lang = lang;
+		localStorage.setItem('lang', lang);
+		applyLanguage();
+		applyFilters();
+		renderTeaser()
+	}
+
+	function setCurrency(cur) {
+		state.currency = cur;
+		localStorage.setItem('currency', cur);
+		updateSwitchUI();
+		applyFilters();
+		renderTeaser()
+	}
+	async function init() {
+		state.lang = localStorage.getItem('lang') || 'hu'
+		state.currency = localStorage.getItem('currency') || 'HUF'
+		applyLanguage()
+		renderTeaser()
+		renderSkeleton()
+		setupMap()
+		const raw = await fetchListings()
+		state.listings = raw.map(normalize)
+		state.filtered = [...state.listings]
+		bindControls()
+		applyFilters()
+	}
+	init()
+	</script>
+</body>
+
 </html>
