@@ -132,6 +132,7 @@ button{appearance:none;border:none;border-radius:12px;padding:10px 14px;font-wei
 const BIN_ID='68add1c9ae596e708fd72498';
 const MASTER_KEY='$2a$10$9sO/ja29sMebpWNvsWmp5.dJ6lv7CPeLBMRFaA/cAEwz42ii6qlCS';
 const BASE_URL='https://api.jsonbin.io/v3/b/'+BIN_ID;
+const IMGBB_KEY='YOUR_IMGBB_API_KEY';
 const statusEl=document.getElementById('status');
 const saveBtn=document.getElementById('saveBtn');
 const drop=document.getElementById('drop');
@@ -142,6 +143,7 @@ let queuedFiles=[];
 function setStatus(msg,type){statusEl.textContent=msg;statusEl.className='status '+(type||'')}
 function uid(){if(crypto.randomUUID){return crypto.randomUUID()}return Date.now().toString(36)+Math.random().toString(36).slice(2)}
 function fileToPreview(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file)})}
+async function fileToBase64(file){const data=await fileToPreview(file);return String(data).split(',')[1]}
 function renderPreviews(){previews.innerHTML='';photoCount.textContent=queuedFiles.length+' selected';queuedFiles.forEach((f,i)=>{const wrap=document.createElement('div');wrap.className='preview';const img=document.createElement('img');img.src=f.preview;const rm=document.createElement('button');rm.className='rm';rm.textContent='Remove';rm.onclick=()=>{queuedFiles.splice(i,1);renderPreviews()};wrap.appendChild(img);wrap.appendChild(rm);previews.appendChild(wrap)})}
 function addFiles(files){for(const f of files){if(!f.type.startsWith('image/'))continue;if(queuedFiles.length>=10)break;queuedFiles.push({file:f,preview:'',uploadedUrl:null})}Promise.all(queuedFiles.map(async q=>{if(!q.preview)q.preview=await fileToPreview(q.file)})).then(renderPreviews)}
 drop.addEventListener('dragover',e=>{e.preventDefault();drop.style.borderColor='#2f86ff'});drop.addEventListener('dragleave',()=>{drop.style.borderColor='#2a2f39'});drop.addEventListener('drop',e=>{e.preventDefault();drop.style.borderColor='#2a2f39';addFiles(e.dataTransfer.files)});
@@ -155,20 +157,22 @@ async function compressImage(file,max=1600,quality=.86){
   const blob=await new Promise(r=>canvas.toBlob(r,'image/jpeg',quality));
   return new File([blob],(file.name||'photo')+'.jpg',{type:'image/jpeg'});
 }
-async function uploadTelegraph(file){
-  const fd=new FormData();fd.append('file',file,file.name||'photo.jpg');
-  const r=await fetch('https://telegra.ph/upload',{method:'POST',body:fd});
-  if(!r.ok)throw new Error('Upload failed');
+async function uploadImage(file){
+  if(!IMGBB_KEY)throw new Error('Configure IMGBB_KEY');
+  const base64=await fileToBase64(file);
+  const fd=new FormData();
+  fd.append('image',base64);
+  const r=await fetch('https://api.imgbb.com/1/upload?key='+encodeURIComponent(IMGBB_KEY),{method:'POST',body:fd});
   const j=await r.json();
-  if(Array.isArray(j)&&j[0]&&j[0].src)return 'https://telegra.ph'+j[0].src;
-  throw new Error('Upload failed');
+  if(!r.ok||!j||!j.data||!j.data.display_url)throw new Error('Upload failed');
+  return j.data.display_url;
 }
 async function uploadPhotos(){
   const urls=[];
   for(const q of queuedFiles){
     if(q.uploadedUrl){urls.push(q.uploadedUrl);continue}
     const small=await compressImage(q.file);
-    const url=await uploadTelegraph(small);
+    const url=await uploadImage(small);
     q.uploadedUrl=url;urls.push(url);
   }
   return urls;

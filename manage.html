@@ -93,6 +93,7 @@ footer.meta{color:var(--muted);font-size:12px;padding:8px 12px 12px;border-top:1
 const BIN_ID='68add1c9ae596e708fd72498';
 const MASTER_KEY='$2a$10$9sO/ja29sMebpWNvsWmp5.dJ6lv7CPeLBMRFaA/cAEwz42ii6qlCS';
 const BASE_URL='https://api.jsonbin.io/v3/b/'+BIN_ID;
+const IMGBB_KEY='YOUR_IMGBB_API_KEY';
 const statusEl=document.getElementById('status');
 const grid=document.getElementById('grid');
 const q=document.getElementById('q');
@@ -200,7 +201,7 @@ function render(){
       try{
         for(const file of files){
           const small=await compressImage(file);
-          const url=await uploadTelegraph(small);
+          const url=await uploadImage(small);
           item.photos=item.photos||[];if(item.photos.length<10)item.photos.push(url);
         }
         setStatus('Photos uploaded.','ok');
@@ -282,13 +283,16 @@ async function compressImage(file,max=1600,quality=.86){
   const blob=await new Promise(r=>canvas.toBlob(r,'image/jpeg',quality));
   return new File([blob],(file.name||'photo')+'.jpg',{type:'image/jpeg'});
 }
-async function uploadTelegraph(file){
-  const fd=new FormData();fd.append('file',file,file.name||'photo.jpg');
-  const r=await fetch('https://telegra.ph/upload',{method:'POST',body:fd});
-  if(!r.ok)throw new Error('Upload failed');
+async function fileToBase64(file){const data=await fileToPreview(file);return String(data).split(',')[1]}
+async function uploadImage(file){
+  if(!IMGBB_KEY)throw new Error('Configure IMGBB_KEY');
+  const base64=await fileToBase64(file);
+  const fd=new FormData();
+  fd.append('image',base64);
+  const r=await fetch('https://api.imgbb.com/1/upload?key='+encodeURIComponent(IMGBB_KEY),{method:'POST',body:fd});
   const j=await r.json();
-  if(Array.isArray(j)&&j[0]&&j[0].src)return 'https://telegra.ph'+j[0].src;
-  throw new Error('Upload failed');
+  if(!r.ok||!j||!j.data||!j.data.display_url)throw new Error('Upload failed');
+  return j.data.display_url;
 }
 async function init(){
   setStatus('Loading...');
