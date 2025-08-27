@@ -5,6 +5,7 @@
 	<meta charset="utf-8">
 	<title>KomplexIngatlan • Találd meg új otthonod</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" type="image/png" href="https://static.vecteezy.com/system/resources/thumbnails/028/653/450/small_2x/yellow-orange-circle-sun-icon-png.png" />
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -53,13 +54,33 @@
 
 	.header {
 		position: fixed;
-		top: 0;
-		left: 0;
-		right: 0;
+		top: 30px;
+		left: 50%;
+		transform: translate(-50%, 0px);
 		z-index: 40;
 		background: rgba(255, 255, 255, .95);
 		backdrop-filter: saturate(180%) blur(10px);
-		border-bottom: 1px solid var(--border)
+		border-bottom: 1px solid var(--border);
+		width: 90vw;
+		max-width: 1300px;
+		border-radius: 10px;
+	}
+
+	@media(max-width: 1300px) {
+		.header {
+			position: fixed;
+			top: 0px;
+			left: 0px;
+			right: 0px;
+			transform: translate(0px, 0px);
+			z-index: 40;
+			background: rgba(255, 255, 255, .95);
+			backdrop-filter: saturate(180%) blur(10px);
+			border-bottom: 1px solid var(--border);
+			width: 100%;
+			max-width: 100%;
+			border-radius: 0px;
+		}
 	}
 
 	.header-inner {
@@ -97,14 +118,15 @@
 	}
 
 	.nav a {
-		padding: 8px 12px;
+		padding: 12px 20px;
 		border-radius: 10px;
 		color: #1f2937
 	}
 
 	.nav .cta {
 		background: var(--primary);
-		color: #fff
+		color: #fff;
+		font-weight: 700;
 	}
 
 	.switchers {
