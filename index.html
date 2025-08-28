@@ -1728,7 +1728,7 @@ function applyLanguage() {
     if(opts[i].value === 'area_asc') opts[i].text = t('sortAreaAsc')
   }
   document.querySelector('.footer-inner .small').textContent = t('footerRights', new Date().getFullYear())
-  els.mapTitle.textContent = t('mapTitle')
+  els.mapTitle.innerHTML = t('mapTitle')
   els.aboutTitle.textContent = t('aboutTitle')
   els.tile1h.textContent = t('tile1h');
   els.tile1p.textContent = t('tile1p')
@@ -1804,6 +1804,7 @@ init()
 </script>
 </body>
 </html>
+
 
 
 
