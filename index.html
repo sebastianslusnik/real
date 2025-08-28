@@ -828,6 +828,19 @@ mask-repeat: no-repeat;
 mask-size: 100% 100%;
 mask-position: center;
 }
+.highlighted-title .hlor::before {
+opacity: 1;
+border-radius: 0;
+background-color: var(--hl-color, rgba(249,115,22,.35));
+-webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 120' preserveAspectRatio='none'><path fill='%23000' d='M5 55 C85 35 165 75 245 55 C325 35 405 75 485 55 C525 50 565 55 595 55 L595 95 C565 100 525 95 485 95 C405 95 325 105 245 95 C165 90 85 100 5 95 Z'/></svg>");
+-webkit-mask-repeat: no-repeat;
+-webkit-mask-size: 100% 100%;
+-webkit-mask-position: center;
+mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 120' preserveAspectRatio='none'><path fill='%23000' d='M5 55 C85 35 165 75 245 55 C325 35 405 75 485 55 C525 50 565 55 595 55 L595 95 C565 100 525 95 485 95 C405 95 325 105 245 95 C165 90 85 100 5 95 Z'/></svg>");
+mask-repeat: no-repeat;
+mask-size: 100% 100%;
+mask-position: center;
+}
 .highlighted-title .hl::after {
 content: "";
 position: absolute;
@@ -873,7 +886,7 @@ mask-position: inherit;
 }
 }
 .highlighted-title .hl-blue { --hl-color: rgba(56, 189, 248, 0.35); }
-.highlighted-title .hl-orange { --hl-color: rgba(249, 115, 22, 0.35); }
+.highlighted-title .hl-orange { --hl-color: rgba(249, 115, 22, 0.35);font-weight:700 !important }
 @supports (-webkit-mask-image: url("")) or (mask-image: url("")) {
 .highlighted-title .hl-orange::before,
 .highlighted-title .hl-orange::after {
@@ -1931,6 +1944,7 @@ mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'
   </body>
 
 </html>
+
 
 
 
