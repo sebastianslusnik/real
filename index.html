@@ -1020,7 +1020,7 @@
 	const MASTER_KEY = '$2a$10$9sO/ja29sMebpWNvsWmp5.dJ6lv7CPeLBMRFaA/cAEwz42ii6qlCS'
 	const BASE_URL = 'https://api.jsonbin.io/v3/b/' + BIN_ID
 	const EUR_TO_HUF = 390
-	const BUSINESS_ADDRESS = 'Magyar utca, Mosonmagyaróvár, Hungary'
+	const BUSINESS_ADDRESS = 'Magyar utca, Mosonmagyaróvár, Magyarország'
 	const FALLBACK_LAT = 47.8712
 	const FALLBACK_LNG = 17.2719
 	const state = {
@@ -1037,6 +1037,27 @@
 		lang: 'hu',
 		currency: 'HUF'
 	}
+	// Orange marker icon
+	const ORANGE_ICON = L.icon({
+		iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png',
+		shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+		iconSize: [25, 41],
+		iconAnchor: [12, 41],
+		popupAnchor: [1, -34],
+		shadowSize: [41, 41],
+		shadowAnchor: [12, 41]
+	})
+	
+	// Address matching (handles both HU/EN country names)
+	function normAddr(s) {
+		return String(s).toLowerCase().replace(/\s+/g, ' ').trim()
+	}
+	const TARGET_ADDRS = [
+		'Magyar utca, Mosonmagyaróvár, Magyarország',
+		'Magyar utca, Mosonmagyaróvár, Hungary'
+	].map(normAddr)
+	const m = L.marker([lat, lng], { icon: ORANGE_ICON }).addTo(state.map)
+		m.bindPopup('KomplexIngatlan<br>' + escapeHtml(BUSINESS_ADDRESS))
 	const els = {
 		navBrowse: document.getElementById('navBrowse'),
 		navMap: document.getElementById('navMap'),
@@ -1738,4 +1759,5 @@
 </body>
 
 </html>
+
 
