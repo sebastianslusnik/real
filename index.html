@@ -888,8 +888,8 @@ position: absolute;
 z-index: -2;
 left: -0.32em;
 right: -0.32em;
-top: 60%;
-height: 1.86em;
+top: 15%;
+height: 2.86em;
 transform: translateY(-50%);
 background-color: var(--hl-color, rgba(249,115,22,.35));
 opacity: 0.35;
@@ -904,8 +904,8 @@ mask-size: inherit;
 mask-position: inherit;
 }
 }
-.highlighted-title .hl-blue { --hl-color: rgba(56, 189, 248, 0.35); }
-.highlighted-title .hl-orange { --hl-color: rgba(249, 115, 22, 0.35);font-weight:700 !important }
+.highlighted-title .hl-blue { --hl-color: rgba(56, 189, 248, 0.35);font-size:18px;position:relative;top:1px }
+.highlighted-title .hl-orange { --hl-color: rgba(249, 115, 22, 0.35);font-weight:700 !important;font-size: 22px; }
 @supports (-webkit-mask-image: url("")) or (mask-image: url("")) {
 .highlighted-title .hl-orange::before,
 .highlighted-title .hl-orange::after {
@@ -1963,6 +1963,7 @@ mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'
   </body>
 
 </html>
+
 
 
 
