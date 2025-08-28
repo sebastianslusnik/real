@@ -807,7 +807,7 @@ position: absolute;
 z-index: -1;
 left: -0.25em;
 right: -0.28em;
-top: 85%;
+top: 90%;
 height: 0.8em;
 transform: translateY(-50%);
 background-color: var(--hl-color, rgba(249,115,22,.35));
@@ -849,6 +849,28 @@ mask-repeat: inherit;
 mask-size: inherit;
 mask-position: inherit;
 }
+  
+.highlighted-title .hlor::after {
+content: "";
+position: absolute;
+z-index: -2;
+left: -0.32em;
+right: -0.32em;
+top: 60%;
+height: 1.86em;
+transform: translateY(-50%);
+background-color: var(--hl-color, rgba(249,115,22,.35));
+opacity: 0.35;
+filter: blur(1.2px);
+-webkit-mask-image: inherit;
+-webkit-mask-repeat: inherit;
+-webkit-mask-size: inherit;
+-webkit-mask-position: inherit;
+mask-image: inherit;
+mask-repeat: inherit;
+mask-size: inherit;
+mask-position: inherit;
+}
 }
 .highlighted-title .hl-blue { --hl-color: rgba(56, 189, 248, 0.35); }
 .highlighted-title .hl-orange { --hl-color: rgba(249, 115, 22, 0.35); }
@@ -859,9 +881,6 @@ mask-position: inherit;
 mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 120' preserveAspectRatio='none'><path fill='%23000' d='M5 58 C90 80 170 40 250 58 C330 76 410 38 490 58 C530 64 570 58 595 58 L595 98 C570 102 530 98 490 98 C410 98 330 108 250 98 C170 94 90 102 5 98 Z'/></svg>");
 }
 }
-   .hl::after {     
-height: 1.86em !important;
-   }
 
     </style>
   </head>
@@ -1225,7 +1244,7 @@ height: 1.86em !important;
           bdLabelShort: 'háló',
           baLabelShort: 'fürdő',
           m2: 'm²',
-          mapTitle: '<span class="hl hl-orange">Irodánk elérhetősége</span><span class="sep">/</span><span class="hl hl-blue">Eladó ingatlanjaink</span>',
+          mapTitle: '<span class="hlor hl-orange">Irodánk elérhetősége</span><span class="sep">/</span><span class="hl hl-blue">Eladó ingatlanjaink</span>',
           aboutTitle: 'Miért a KomplexIngatlan',
           tile1h: 'Helyismeret',
           tile1p: 'Ügynökeink jól ismerik a környékeket és naprakész piaci tudással segítenek.',
@@ -1279,7 +1298,7 @@ height: 1.86em !important;
           bdLabelShort: 'izba',
           baLabelShort: 'kúpeľňa',
           m2: 'm²',
-          mapTitle: '<span class="hl hl-orange">Naša pobočka</span><span class="sep">/</span><span class="hl hl-blue">Nehnuteľnosti na predaj</span>',
+          mapTitle: '<span class="hlor hl-orange">Naša pobočka</span><span class="sep">/</span><span class="hl hl-blue">Nehnuteľnosti na predaj</span>',
           aboutTitle: 'Prečo KomplexIngatlan',
           tile1h: 'Lokálne znalosti',
           tile1p: 'Naši agenti poznajú štvrte a prinášajú aktuálne informácie o trhu.',
@@ -1912,6 +1931,7 @@ height: 1.86em !important;
   </body>
 
 </html>
+
 
 
 
