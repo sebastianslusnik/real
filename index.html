@@ -801,7 +801,26 @@ display: inline-block;
 z-index: 0;
 padding: 0 .05em;
 }
+.highlighted-title .hlor {
+position: relative;
+display: inline-block;
+z-index: 0;
+padding: 0 .05em;
+}
 .highlighted-title .hl::before {
+content: "";
+position: absolute;
+z-index: -1;
+left: -0.25em;
+right: -0.28em;
+top: 90%;
+height: 0.8em;
+transform: translateY(-50%);
+background-color: var(--hl-color, rgba(249,115,22,.35));
+opacity: 0.85;
+border-radius: 16px 12px 14px 14px / 14px 14px 12px 16px;
+}
+.highlighted-title .hlor::before {
 content: "";
 position: absolute;
 z-index: -1;
@@ -1944,6 +1963,7 @@ mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'
   </body>
 
 </html>
+
 
 
 
