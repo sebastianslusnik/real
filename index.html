@@ -1103,7 +1103,7 @@ const els = {
   contactAddress: document.getElementById('contactAddress'),
   contactHours: document.getElementById('contactHours')
 }
-document.getElementById('year').textContent = new Date().getFullYear()
+document.getElementById('year').innerHTML = new Date().getFullYear()
 const i18n = {
   hu: {
     navBrowse: 'Böngészés',
@@ -1340,7 +1340,7 @@ function applyFilters() {
   if(maxPriceRaw) active.push(t('activeMax') + ' ' + (state.currency === 'EUR' ? fmtMoneyEUR(maxPriceRaw) : fmtMoneyHUF(maxPriceRaw)))
   if(term) active.push('“' + term + '”')
   if(active.length) {
-    els.activeFilters.textContent = active.join(' • ');
+    els.activeFilters.innerHTML = active.join(' • ');
     els.activeFilters.classList.remove('hidden')
   } else {
     els.activeFilters.classList.add('hidden')
@@ -1351,7 +1351,7 @@ function applyFilters() {
 
 function setResultCount() {
   const n = state.filtered.length
-  els.resultCount.textContent = t('resultCount', n)
+  els.resultCount.innerHTML = t('resultCount', n)
 }
 
 function renderSkeleton(count = 6) {
@@ -1422,10 +1422,10 @@ function renderGrid() {
     carousel.className = 'carousel'
     const badge = document.createElement('div');
     badge.className = 'badge';
-    badge.textContent = item.propertyType || '—'
+    badge.innerHTML = item.propertyType || '—'
     const price = document.createElement('div');
     price.className = 'price';
-    price.textContent = fmtPriceFromEUR(item.priceEUR || 0)
+    price.innerHTML = fmtPriceFromEUR(item.priceEUR || 0)
     carousel.appendChild(badge);
     carousel.appendChild(price)
     attachCarousel(carousel, item.photos, item.id)
@@ -1433,18 +1433,18 @@ function renderGrid() {
     body.className = 'body'
     const title = document.createElement('h4');
     title.className = 'title';
-    title.textContent = item.title || ''
+    title.innerHTML = item.title || ''
     const addr = document.createElement('div');
     addr.className = 'addr';
-    addr.textContent = [item.address, item.city, item.state].filter(Boolean).join(', ')
+    addr.innerHTML = [item.address, item.city, item.state].filter(Boolean).join(', ')
     const specs = document.createElement('div');
     specs.className = 'specs'
     const s1 = document.createElement('span');
-    s1.textContent = (item.bedrooms || 0) + ' ' + t('bdLabelShort')
+    s1.innerHTML = (item.bedrooms || 0) + ' ' + t('bdLabelShort')
     const s2 = document.createElement('span');
-    s2.textContent = (item.bathrooms || 0) + ' ' + t('baLabelShort')
+    s2.innerHTML = (item.bathrooms || 0) + ' ' + t('baLabelShort')
     const s3 = document.createElement('span');
-    s3.textContent = (item.areaM2 || 0) + ' ' + t('m2')
+    s3.innerHTML = (item.areaM2 || 0) + ' ' + t('m2')
     specs.appendChild(s1);
     specs.appendChild(s2);
     specs.appendChild(s3)
@@ -1464,17 +1464,17 @@ function renderGrid() {
 function openModal(item) {
   state.modal.id = item.id
   state.modal.idx = 0
-  els.modalType.textContent = item.propertyType || '—'
-  els.modalPrice.textContent = fmtPriceFromEUR(item.priceEUR || 0)
-  els.modalTitle.textContent = item.title || ''
-  els.modalAddr.textContent = [item.address, item.city, item.state].filter(Boolean).join(', ')
+  els.modalType.innerHTML = item.propertyType || '—'
+  els.modalPrice.innerHTML = fmtPriceFromEUR(item.priceEUR || 0)
+  els.modalTitle.innerHTML = item.title || ''
+  els.modalAddr.innerHTML = [item.address, item.city, item.state].filter(Boolean).join(', ')
   els.modalChips.innerHTML = '';
   [(item.bedrooms || 0) + ' ' + t('bdLabelShort'), (item.bathrooms || 0) + ' ' + t('baLabelShort'), (item.areaM2 || 0) + ' ' + t('m2')].forEach(tx => {
     const s = document.createElement('span');
-    s.textContent = tx;
+    s.innerHTML = tx;
     els.modalChips.appendChild(s)
   })
-  els.modalDesc.textContent = item.description || ''
+  els.modalDesc.innerHTML = item.description || ''
   renderModalImage(item)
   els.modal.classList.add('open')
   document.body.style.overflow = 'hidden'
@@ -1496,10 +1496,10 @@ function openModal(item) {
     state.modal.idx = (state.modal.idx + 1) % item.photos.length;
     renderModalImage(item)
   }
-  els.agentRole.textContent = t('agentRole')
-  els.ctaCall.lastChild.textContent = ' ' + t('callNow')
+  els.agentRole.innerHTML = t('agentRole')
+  els.ctaCall.lastChild.innerHTML = ' ' + t('callNow')
   const emailLink = els.ctaEmail;
-  emailLink.lastChild.textContent = ' ' + t('emailAgent')
+  emailLink.lastChild.innerHTML = ' ' + t('emailAgent')
 }
 
 function closeModal() {
@@ -1702,16 +1702,16 @@ function bindControls() {
 }
 
 function applyLanguage() {
-  els.navBrowse.textContent = t('navBrowse')
-  els.navMap.textContent = t('navMap')
-  els.navAbout.textContent = t('navAbout')
-  els.navCTA.textContent = t('navCTA')
-  els.heroHeadline.textContent = t('heroHeadline')
-  els.heroSub.textContent = t('heroSub')
+  els.navBrowse.innerHTML = t('navBrowse')
+  els.navMap.innerHTML = t('navMap')
+  els.navAbout.innerHTML = t('navAbout')
+  els.navCTA.innerHTML = t('navCTA')
+  els.heroHeadline.innerHTML = t('heroHeadline')
+  els.heroSub.innerHTML = t('heroSub')
   els.heroSearch.placeholder = t('heroSearch')
   els.heroType.options[0].text = t('heroTypeAny')
   els.heroBeds.options[0].text = t('heroBeds')
-  els.heroGo.textContent = t('heroGo')
+  els.heroGo.innerHTML = t('heroGo')
   els.q.placeholder = t('searchPlaceholder')
   els.filterType.options[0].text = t('allTypes')
   els.minBeds.options[0].text = t('minBeds')
@@ -1727,49 +1727,49 @@ function applyLanguage() {
     if(opts[i].value === 'area_desc') opts[i].text = t('sortAreaDesc')
     if(opts[i].value === 'area_asc') opts[i].text = t('sortAreaAsc')
   }
-  document.querySelector('.footer-inner .small').textContent = t('footerRights', new Date().getFullYear())
+  document.querySelector('.footer-inner .small').innerHTML = t('footerRights', new Date().getFullYear())
   els.mapTitle.innerHTML = t('mapTitle')
-  els.aboutTitle.textContent = t('aboutTitle')
-  els.tile1h.textContent = t('tile1h');
-  els.tile1p.textContent = t('tile1p')
-  els.tile2h.textContent = t('tile2h');
-  els.tile2p.textContent = t('tile2p')
-  els.tile3h.textContent = t('tile3h');
-  els.tile3p.textContent = t('tile3p')
-  els.agentRole.textContent = t('agentRole')
-  els.ctaCall.lastChild.textContent = ' ' + t('callNow')
-  els.ctaEmail.lastChild.textContent = ' ' + t('emailAgent')
-  els.lblAddress.textContent = t('contactAddress')
-  els.lblHours.textContent = t('contactHours')
-  els.lblMobile.textContent = t('contactMobile')
-  els.lblEmail.textContent = t('contactEmail')
+  els.aboutTitle.innerHTML = t('aboutTitle')
+  els.tile1h.innerHTML = t('tile1h');
+  els.tile1p.innerHTML = t('tile1p')
+  els.tile2h.innerHTML = t('tile2h');
+  els.tile2p.innerHTML = t('tile2p')
+  els.tile3h.innerHTML = t('tile3h');
+  els.tile3p.innerHTML = t('tile3p')
+  els.agentRole.innerHTML = t('agentRole')
+  els.ctaCall.lastChild.innerHTML = ' ' + t('callNow')
+  els.ctaEmail.lastChild.innerHTML = ' ' + t('emailAgent')
+  els.lblAddress.innerHTML = t('contactAddress')
+  els.lblHours.innerHTML = t('contactHours')
+  els.lblMobile.innerHTML = t('contactMobile')
+  els.lblEmail.innerHTML = t('contactEmail')
   els.contactHours.innerHTML = t('businessHours').replace(/\n/g, '<br>')
   updateSwitchUI()
 }
 
 function updateSwitchUI() {
   if(state.lang === 'hu') {
-    els.langFlag.textContent = i18n.hu.langFlag;
-    els.langLabel.textContent = i18n.hu.langLabel
+    els.langFlag.innerHTML = i18n.hu.langFlag;
+    els.langLabel.innerHTML = i18n.hu.langLabel
   } else {
-    els.langFlag.textContent = i18n.sk.langFlag;
-    els.langLabel.textContent = i18n.sk.langLabel
+    els.langFlag.innerHTML = i18n.sk.langFlag;
+    els.langLabel.innerHTML = i18n.sk.langLabel
   }
   if(state.currency === 'HUF') {
-    els.curFlag.textContent = i18n[state.lang].curFlagHUF;
-    els.curLabel.textContent = i18n[state.lang].curLabelHUF
+    els.curFlag.innerHTML = i18n[state.lang].curFlagHUF;
+    els.curLabel.innerHTML = i18n[state.lang].curLabelHUF
   } else {
-    els.curFlag.textContent = i18n[state.lang].curFlagEUR;
-    els.curLabel.textContent = i18n[state.lang].curLabelEUR
+    els.curFlag.innerHTML = i18n[state.lang].curFlagEUR;
+    els.curLabel.innerHTML = i18n[state.lang].curLabelEUR
   }
 }
 
 function renderTeaser() {
   const priceEUR = 350000
-  els.heroTeaserBeds.textContent = '3 ' + t('bdLabelShort')
-  els.heroTeaserBaths.textContent = '2 ' + t('baLabelShort')
-  els.heroTeaserArea.textContent = '172 ' + t('m2')
-  els.heroTeaserPrice.textContent = fmtPriceFromEUR(priceEUR)
+  els.heroTeaserBeds.innerHTML = '3 ' + t('bdLabelShort')
+  els.heroTeaserBaths.innerHTML = '2 ' + t('baLabelShort')
+  els.heroTeaserArea.innerHTML = '172 ' + t('m2')
+  els.heroTeaserPrice.innerHTML = fmtPriceFromEUR(priceEUR)
 }
 
 function setLang(lang) {
@@ -1804,7 +1804,6 @@ init()
 </script>
 </body>
 </html>
-
 
 
 
