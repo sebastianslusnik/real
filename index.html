@@ -785,6 +785,65 @@
       .hidden {
         display: none
       }
+
+      /* Highlighted map title */
+      .highlighted-title {
+        position: relative;
+        line-height: 1.2;
+        overflow: visible;
+      }
+      .highlighted-title .sep {
+        color: #64748b; /* muted separator */
+        margin: 0 .35em;
+      }
+      
+      /* Base highlight behavior */
+      .highlighted-title .hl {
+        position: relative;
+        display: inline-block;
+        z-index: 0;          /* keep text above the highlight */
+        padding: 0 .05em;    /* tiny breathing room so the stroke can overflow */
+      }
+      
+      /* Main highlighter stroke */
+      .highlighted-title .hl::before {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        left: -0.18em;       /* overflow to feel like a marker stroke */
+        right: -0.22em;
+        top: 60%;
+        height: 0.7em;       /* thickness of the marker */
+        transform: translateY(-50%);
+        background: var(--hl-color);
+        opacity: 0.75;       /* slight transparency */
+        border-radius: 14px 10px 12px 12px / 12px 12px 10px 14px; /* organic, non-symmetrical ends */
+        filter: saturate(1.03);
+      }
+      
+      /* Subtle shadow/bleed layer for more natural feel */
+      .highlighted-title .hl::after {
+        content: "";
+        position: absolute;
+        z-index: -2;
+        left: -0.28em;
+        right: -0.28em;
+        top: 60%;
+        height: 0.74em;
+        transform: translateY(-50%) skewX(-1deg);
+        background: var(--hl-color);
+        opacity: 0.28;
+        border-radius: 18px;
+      }
+      
+      /* Color + individual bend per part */
+      .highlighted-title .hl-blue { --hl-color: rgba(56, 189, 248, 0.35); }   /* light blue */
+      .highlighted-title .hl-blue::before { transform: translateY(-50%) rotate(-1.4deg); }
+      .highlighted-title .hl-blue::after  { transform: translateY(-50%) rotate(-1.4deg) skewX(-1deg); }
+      
+      .highlighted-title .hl-orange { --hl-color: rgba(249, 115, 22, 0.35); } /* orange (matches site theme) */
+      .highlighted-title .hl-orange::before { transform: translateY(-50%) rotate(1.1deg); }
+      .highlighted-title .hl-orange::after  { transform: translateY(-50%) rotate(1.1deg) skewX(-1deg); }
     </style>
   </head>
 
@@ -910,7 +969,11 @@
     </section>
     <section id="mapSection" class="section">
       <div class="container">
-        <h3 class="section-title" id="mapTitle">Irodánk elérhetőségei</h3>
+        <h3 class="section-title highlighted-title" id="mapTitle">
+          <span class="hl hl-orange">Irodánk elérhetősége</span>
+          <span class="sep">/</span>
+          <span class="hl hl-blue">Eladó ingatlanjaink</span>
+        </h3>
         <div class="mapTwoCol">
           <div class="map-wrap">
             <div id="map"></div>
@@ -1143,7 +1206,7 @@
           bdLabelShort: 'háló',
           baLabelShort: 'fürdő',
           m2: 'm²',
-          mapTitle: 'Irodánk elérhetősége <span>/ Eladó ingatlanjaink</span>',
+          mapTitle: '<span class="hl hl-orange">Irodánk elérhetősége</span><span class="sep">/</span><span class="hl hl-blue">Eladó ingatlanjaink</span>',
           aboutTitle: 'Miért a KomplexIngatlan',
           tile1h: 'Helyismeret',
           tile1p: 'Ügynökeink jól ismerik a környékeket és naprakész piaci tudással segítenek.',
@@ -1197,7 +1260,7 @@
           bdLabelShort: 'izba',
           baLabelShort: 'kúpeľňa',
           m2: 'm²',
-          mapTitle: 'Naša pobočka <span>/ Nehnuteľnosti na predaj</span>',
+          mapTitle: '<span class="hl hl-orange">Naša pobočka</span><span class="sep">/</span><span class="hl hl-blue">Nehnuteľnosti na predaj</span>',
           aboutTitle: 'Prečo KomplexIngatlan',
           tile1h: 'Lokálne znalosti',
           tile1p: 'Naši agenti poznajú štvrte a prinášajú aktuálne informácie o trhu.',
@@ -1830,4 +1893,5 @@
   </body>
 
 </html>
+
 
