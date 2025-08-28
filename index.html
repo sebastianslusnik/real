@@ -1029,6 +1029,7 @@ const state = {
   carouselIndex: {},
   map: null,
   markers: [],
+  businessMarker: null,
   geoCache: new Map(),
   modal: {
     id: null,
@@ -1549,23 +1550,41 @@ function setupMap() {
   }).addTo(state.map)
   placeBusinessMarker()
 }
+
 async function placeBusinessMarker() {
   try {
     const loc = await geocode(BUSINESS_ADDRESS)
     const lat = (loc && loc.lat) || FALLBACK_LAT
     const lng = (loc && loc.lng) || FALLBACK_LNG
-    state.map.setView([lat, lng], 16)
-    const m = L.marker([lat, lng], { icon: ORANGE_ICON }).addTo(state.map)
-    m.bindPopup('KomplexIngatlan<br>' + escapeHtml(BUSINESS_ADDRESS))
+    state.businessMarker = L.marker([lat, lng], { icon: ORANGE_ICON }).addTo(state.map)
+    state.businessMarker.bindPopup('KomplexIngatlan<br>' + escapeHtml(BUSINESS_ADDRESS))
   } catch (e) {
-    const m = L.marker([FALLBACK_LAT, FALLBACK_LNG], { icon: ORANGE_ICON }).addTo(state.map)
-    m.bindPopup('KomplexIngatlan<br>' + escapeHtml(BUSINESS_ADDRESS))
+    state.businessMarker = L.marker([FALLBACK_LAT, FALLBACK_LNG], { icon: ORANGE_ICON }).addTo(state.map)
+    state.businessMarker.bindPopup('KomplexIngatlan<br>' + escapeHtml(BUSINESS_ADDRESS))
   }
 }
 
-function sleep(ms) {
-  return new Promise(r => setTimeout(r, ms))
+// Simple concurrency-limited mapper to speed up geocoding without big delays
+async function mapWithConcurrency(items, mapper, concurrency = 4) {
+  const results = new Array(items.length)
+  let i = 0
+  let active = 0
+  return new Promise(resolve => {
+    function next() {
+      if (i === items.length && active === 0) return resolve(results)
+      while (active < concurrency && i < items.length) {
+        const idx = i++
+        active++
+        Promise.resolve(mapper(items[idx], idx))
+          .then(res => { results[idx] = res })
+          .catch(() => { results[idx] = undefined })
+          .finally(() => { active--; next() })
+      }
+    }
+    next()
+  })
 }
+
 async function geocode(addr) {
   const key = addr.trim().toLowerCase()
   if(state.geoCache.has(key)) return state.geoCache.get(key)
@@ -1584,28 +1603,50 @@ async function geocode(addr) {
   state.geoCache.set(key, loc)
   return loc
 }
+
 async function updateMapMarkers() {
   if(!state.map) return
+
+  // Remove existing listing markers (keep business marker)
   state.markers.forEach(m => state.map.removeLayer(m))
   state.markers = []
+
   const list = state.filtered.slice(0, 20)
-  let bounds = []
-  for(const item of list) {
-    const addr = [item.address, item.city, item.state].filter(Boolean).join(', ')
-    if(!addr) continue
-    try {
-      const loc = await geocode(addr)
-      if(!loc) continue
-      const isTarget = TARGET_ADDRS.includes(normAddr(addr))
-      const m = isTarget
-        ? L.marker([loc.lat, loc.lng], { icon: ORANGE_ICON })
-        : L.marker([loc.lat, loc.lng])
-      m.addTo(state.map)
-      m.bindPopup('<strong>' + escapeHtml(item.title || '') + '</strong><br>' + escapeHtml(addr) + '<br>' + escapeHtml(fmtPriceFromEUR(item.priceEUR || 0)))
-      state.markers.push(m)
-      bounds.push([loc.lat, loc.lng])
-      await sleep(250)
-    } catch (e) {}
+  const itemsWithAddr = list.map(item => ({
+    item,
+    addr: [item.address, item.city, item.state].filter(Boolean).join(', ')
+  })).filter(x => x.addr)
+
+  // Geocode faster with limited concurrency
+  const geocoded = await mapWithConcurrency(itemsWithAddr, async ({ item, addr }) => {
+    const loc = await geocode(addr)
+    return loc ? { item, addr, loc } : null
+  }, 4)
+
+  const bounds = []
+
+  // Create markers in batch
+  for (const rec of geocoded) {
+    if (!rec) continue
+    const { item, addr, loc } = rec
+    const isTarget = TARGET_ADDRS.includes(normAddr(addr))
+    const m = L.marker([loc.lat, loc.lng], isTarget ? { icon: ORANGE_ICON } : undefined).addTo(state.map)
+    m.bindPopup('<strong>' + escapeHtml(item.title || '') + '</strong><br>' + escapeHtml(addr) + '<br>' + escapeHtml(fmtPriceFromEUR(item.priceEUR || 0)))
+    state.markers.push(m)
+    bounds.push([loc.lat, loc.lng])
+  }
+
+  // Include business marker in bounds if present
+  if (state.businessMarker) {
+    const ll = state.businessMarker.getLatLng()
+    bounds.push([ll.lat, ll.lng])
+  }
+
+  // Adjust map view to fit all markers smoothly
+  if (bounds.length === 1) {
+    state.map.setView(bounds[0], 16)
+  } else if (bounds.length > 1) {
+    state.map.fitBounds(bounds, { padding: [30, 30], maxZoom: 17 })
   }
 }
 
@@ -1762,8 +1803,8 @@ async function init() {
 init()
 </script>
 </body>
-
 </html>
+
 
 
 
