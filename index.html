@@ -849,9 +849,6 @@ mask-repeat: inherit;
 mask-size: inherit;
 mask-position: inherit;
 }
-   .hl::after {     
-height: 1.86em;
-   }
 }
 .highlighted-title .hl-blue { --hl-color: rgba(56, 189, 248, 0.35); }
 .highlighted-title .hl-orange { --hl-color: rgba(249, 115, 22, 0.35); }
@@ -862,6 +859,9 @@ height: 1.86em;
 mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 120' preserveAspectRatio='none'><path fill='%23000' d='M5 58 C90 80 170 40 250 58 C330 76 410 38 490 58 C530 64 570 58 595 58 L595 98 C570 102 530 98 490 98 C410 98 330 108 250 98 C170 94 90 102 5 98 Z'/></svg>");
 }
 }
+   .hl::after {     
+height: 1.86em !important;
+   }
 
     </style>
   </head>
@@ -1912,6 +1912,7 @@ mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'
   </body>
 
 </html>
+
 
 
 
