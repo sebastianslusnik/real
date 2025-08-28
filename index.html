@@ -915,12 +915,15 @@ mask-position: inherit;
 mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 120' preserveAspectRatio='none'><path fill='%23000' d='M5 58 C90 80 170 40 250 58 C330 76 410 38 490 58 C530 64 570 58 595 58 L595 98 C570 102 530 98 490 98 C410 98 330 108 250 98 C170 94 90 102 5 98 Z'/></svg>");
 }
 }
-      input, select, .searchbar, .hero-card {
+      input, select, button, .searchbar, .hero-card {
         cursor: pointer;
         transition: .3s;
       }
-      input:hover, select:hover, .searchbar:hover {
+      input:hover, select:hover, button:hover {
         transform: scale(1.05);
+      }
+      .searchbar:hover {
+        transform: scale(1.02);
       }
       .hero-card:hover {
         transform: rotate(-5deg) scale(1.05);
@@ -1975,6 +1978,7 @@ mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'
   </body>
 
 </html>
+
 
 
 
