@@ -1056,7 +1056,7 @@
 		'Magyar utca, Mosonmagyaróvár, Magyarország',
 		'Magyar utca, Mosonmagyaróvár, Hungary'
 	].map(normAddr)
-	const m = L.marker([lat, lng], { icon: ORANGE_ICON }).addTo(state.map)
+	const m = L.marker(["47.8712", "17.2719"], { icon: ORANGE_ICON }).addTo(state.map)
 		m.bindPopup('KomplexIngatlan<br>' + escapeHtml(BUSINESS_ADDRESS))
 	const els = {
 		navBrowse: document.getElementById('navBrowse'),
@@ -1759,5 +1759,6 @@
 </body>
 
 </html>
+
 
 
