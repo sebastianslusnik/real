@@ -11,7 +11,7 @@
 		--card: #ffffff;
 		--muted: #667085;
 		--text: #0b1320;
-		--primary: #f97316;
+		--primary: #fa943f;
 		--primary-600: #ea580c;
 		--border: #efe7dc;
 		--chip: #fff7ed;
@@ -21,14 +21,15 @@
 	}
 
 	* {
-		box-sizing: border-box
+		box-sizing: border-box;
+		font-family: 'Inter' !important;
 	}
 
 	body {
 		margin: 0;
 		background: var(--bg);
 		color: var(--text);
-		font-family: Inter, ui-sans-serif, system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif
+		font-family: Inter
 	}
 
 	a {
@@ -56,23 +57,26 @@
 	}
 
 	.logo {
-		width: 32px;
-		height: 32px;
-		border-radius: 8px;
-		background: linear-gradient(135deg, #fb923c, #f59e0b)
+		width: 48px;
+		height: 48px;
+		border-radius: 50%;
+		backgroundimg: url("favii.png")
 	}
 
 	.brand h1 {
 		font-size: 18px;
-		margin: 0
+		margin: 0;
+		font-weight: 800
 	}
 
 	.header a {
 		color: #1f2937;
 		background: #fff;
 		border: 1px solid var(--border);
-		padding: 8px 12px;
-		border-radius: 10px
+		padding: 10px 16px;
+		border-radius: 8px;
+		font-weight: 600;
+		font-size: 14px;
 	}
 
 	.header a.cta {
@@ -302,7 +306,7 @@
 		<div class="header">
 			<div class="brand">
 				<div class="logo"></div>
-				<h1>Realty Admin</h1>
+				<h1>Komplex<span style="font-weight:300">Ingatlan</span>.com</h1>
 			</div>
 			<div style="display:flex;gap:8px">
 				<a class="link" href="index.html">Nyilvános oldal</a>
@@ -757,6 +761,7 @@ async function triggerPagesBuild() {
 </body>
 
 </html>
+
 
 
 
