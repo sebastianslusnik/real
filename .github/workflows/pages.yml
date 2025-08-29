@@ -1,4 +1,4 @@
-name: Run build and deploy to GitHub Pages
+name: Run my yaml
 
 on:
   push:
