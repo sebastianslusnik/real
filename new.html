@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="hu">
+
 <head>
 	<meta charset="utf-8">
 	<title>Realty • Új ingatlan felvitele</title>
@@ -60,7 +61,10 @@
 		width: 48px;
 		height: 48px;
 		border-radius: 50%;
-		backgroundimg: url("favii.png")
+		background-image: url(favii.png);
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: contain;
 	}
 
 	.brand h1 {
@@ -295,6 +299,7 @@
 		font-size: 12px;
 		margin-top: 6px
 	}
+
 	#application {
 		display: none;
 	}
@@ -322,12 +327,12 @@
 		    transform: translate(-50%, -50%);
 		    filter: drop-shadow(2px 4px 6px #ddd);
 		">
-		<span style="
+			<span style="
 		    position: absolute;
 		    margin: -25px 5px;
 		    font-weight: 600;
 		">Bejelentkezés</span>
-		<input id="password" type="password" autocomplete="off" style="
+			<input id="password" type="password" autocomplete="off" style="
 		    font-size: 30px;
 		    padding: 5px 30px;
 		    border: 1px solid #eee;
@@ -413,116 +418,106 @@
 	<script src="config.js"></script>
 	<script>
 	document.addEventListener('DOMContentLoaded', () => {
-		const SECRET = window.PUBLIC_PASS?.pass;
+		const SECRET = window.PUBLIC_PASS ? .pass;
 		const input = document.getElementById('password');
 		const passContainer = document.getElementById('pass');
 		let restt = document.getElementById('application');
 		const logoutBtn = document.getElementById('logout');
 		const placeholder = document.createComment('application-placeholder');
 		const placeholderL = document.createComment('application-placeholder');
-if (restt && restt.parentNode) {
-restt.parentNode.replaceChild(placeholder, restt);
-logoutBtn.parentNode.replaceChild(placeholderL, logoutBtn);
-}
+		if(restt && restt.parentNode) {
+			restt.parentNode.replaceChild(placeholder, restt);
+			logoutBtn.parentNode.replaceChild(placeholderL, logoutBtn);
+		}
+		const loadStored = () => {
+			const saved = localStorage.getItem('password') || '';
+			if(saved) input.value = saved;
+		};
+		const authorized = () => input.value.includes(SECRET);
 
-const loadStored = () => {
-const saved = localStorage.getItem('password') || '';
-if (saved) input.value = saved;
-};
+		function show() {
+			if(!restt.isConnected && placeholder.parentNode) {
+				placeholder.parentNode.insertBefore(restt, placeholder.nextSibling);
+				placeholderL.parentNode.insertBefore(logoutBtn, placeholderL.nextSibling);
+			}
+			restt.style.setProperty('display', 'inline-grid', 'important');
+			logoutBtn.style.setProperty('display', 'inline-grid', 'important');
+			input.disabled = true;
+			passContainer.style.setProperty('display', 'none', 'important');
+		}
 
-const authorized = () => input.value.includes(SECRET);
+		function hide() {
+			if(restt.isConnected && restt.parentNode) {
+				restt.parentNode.replaceChild(placeholder, restt);
+				logoutBtn.parentNode.replaceChild(placeholderL, logoutBtn);
+			}
+			restt.style.setProperty('display', 'none', 'important');
+			logoutBtn.style.setProperty('display', 'none', 'important');
+			input.disabled = false;
+			passContainer.style.removeProperty('display');
+		}
 
-function show() {
-if (!restt.isConnected && placeholder.parentNode) {
-placeholder.parentNode.insertBefore(restt, placeholder.nextSibling);
-placeholderL.parentNode.insertBefore(logoutBtn, placeholderL.nextSibling);
-}
-restt.style.setProperty('display', 'inline-grid', 'important');
-logoutBtn.style.setProperty('display', 'inline-grid', 'important');
-input.disabled = true;
-passContainer.style.setProperty('display', 'none', 'important');
-}
-
-function hide() {
-if (restt.isConnected && restt.parentNode) {
-restt.parentNode.replaceChild(placeholder, restt);
-logoutBtn.parentNode.replaceChild(placeholderL, logoutBtn);
-}
-restt.style.setProperty('display', 'none', 'important');
-logoutBtn.style.setProperty('display', 'none', 'important');
-input.disabled = false;
-passContainer.style.removeProperty('display');
-}
-
-function sync() {
-if (authorized()) {
-localStorage.setItem('password', input.value);
-show();
-} else {
-hide();
-}
-}
-
-input.addEventListener('input', sync);
-input.addEventListener('change', sync);
-
-logoutBtn.addEventListener('click', () => {
-localStorage.removeItem('password');
-input.value = '';
-hide();
-});
-
-const mo = new MutationObserver(() => {
-if (!authorized()) {
-const el = document.getElementById('application');
-const el2 = document.getElementById('logoutBtn');
-if (el && el.isConnected) {
-el.parentNode.replaceChild(placeholder, el);
-el2.parentNode.replaceChild(placeholderL, el2);
-}
-}
-});
-
-mo.observe(document.documentElement, {
-subtree: true,
-childList: true,
-attributes: true,
-attributeFilter: ['style', 'class', 'hidden']
-});
-
-loadStored();
-sync();
-});
-
-const GH_OWNER = 'sebastianslusnik';
-const GH_REPO = 'real';
-const GH_WORKFLOW_FILE = 'pages.yml'; // .github/workflows/pages.yml
-const GH_REF = 'main'; // branch to build
-const GH_TOKEN = window.PUBLIC_CONFIG?.apiBase;
-
-async function triggerPagesBuild() {
-	if (!GH_TOKEN) {
-		throw new Error('GH_TOKEN is missing. Make sure config.js provides a PAT.');
+		function sync() {
+			if(authorized()) {
+				localStorage.setItem('password', input.value);
+				show();
+			} else {
+				hide();
+			}
+		}
+		input.addEventListener('input', sync);
+		input.addEventListener('change', sync);
+		logoutBtn.addEventListener('click', () => {
+			localStorage.removeItem('password');
+			input.value = '';
+			hide();
+		});
+		const mo = new MutationObserver(() => {
+			if(!authorized()) {
+				const el = document.getElementById('application');
+				const el2 = document.getElementById('logoutBtn');
+				if(el && el.isConnected) {
+					el.parentNode.replaceChild(placeholder, el);
+					el2.parentNode.replaceChild(placeholderL, el2);
+				}
+			}
+		});
+		mo.observe(document.documentElement, {
+			subtree: true,
+			childList: true,
+			attributes: true,
+			attributeFilter: ['style', 'class', 'hidden']
+		});
+		loadStored();
+		sync();
+	});
+	const GH_OWNER = 'sebastianslusnik';
+	const GH_REPO = 'real';
+	const GH_WORKFLOW_FILE = 'pages.yml'; // .github/workflows/pages.yml
+	const GH_REF = 'main'; // branch to build
+	const GH_TOKEN = window.PUBLIC_CONFIG ? .apiBase;
+	async function triggerPagesBuild() {
+		if(!GH_TOKEN) {
+			throw new Error('GH_TOKEN is missing. Make sure config.js provides a PAT.');
+		}
+		const url = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/actions/workflows/${encodeURIComponent(GH_WORKFLOW_FILE)}/dispatches`;
+		const res = await fetch(url, {
+			method: 'POST',
+			headers: {
+				'Authorization': `Bearer ${GH_TOKEN}`,
+				'Accept': 'application/vnd.github+json',
+				'Content-Type': 'application/json',
+				'X-GitHub-Api-Version': '2022-11-28'
+			},
+			body: JSON.stringify({
+				ref: 'main'
+			})
+		});
+		if(!res.ok) {
+			const text = await res.text().catch(() => '');
+			throw new Error(`GitHub workflow trigger failed: ${res.status} ${res.statusText} ${text}`);
+		}
 	}
-  const url = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/actions/workflows/${encodeURIComponent(GH_WORKFLOW_FILE)}/dispatches`;
-
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${GH_TOKEN}`,
-      'Accept': 'application/vnd.github+json',
-      'Content-Type': 'application/json',
-	  'X-GitHub-Api-Version': '2022-11-28'
-    },
-    body: JSON.stringify({ ref: 'main' })
-  });
-
-  if (!res.ok) {
-    const text = await res.text().catch(() => '');
-	throw new Error(`GitHub workflow trigger failed: ${res.status} ${res.statusText} ${text}`);
-  }
-}
-		
 	const BIN_ID = '68add1c9ae596e708fd72498'
 	const MASTER_KEY = '$2a$10$9sO/ja29sMebpWNvsWmp5.dJ6lv7CPeLBMRFaA/cAEwz42ii6qlCS'
 	const BASE_URL = 'https://api.jsonbin.io/v3/b/' + BIN_ID
@@ -743,13 +738,13 @@ async function triggerPagesBuild() {
 			document.getElementById('desc').value = ''
 			queuedFiles = [];
 			renderPreviews();
-			photoCount.textContent = '0 kiválasztva';			
+			photoCount.textContent = '0 kiválasztva';
 			await saveListings(list)
 			try {
-			await triggerPagesBuild();
-			setStatus('Sikeres mentés... 1-2 perc múlva megjelenik az oldalon.', 'ok');
+				await triggerPagesBuild();
+				setStatus('Sikeres mentés... 1-2 perc múlva megjelenik az oldalon.', 'ok');
 			} catch (e) {
-			setStatus('A mentés SIKERES volt, de a publikálás indítása nem sikerült.', 'err');
+				setStatus('A mentés SIKERES volt, de a publikálás indítása nem sikerült.', 'err');
 			}
 		} catch (e) {
 			setStatus('Hiba: ' + (e && e.message ? e.message : 'Nem sikerült menteni'), 'err')
@@ -761,36 +756,3 @@ async function triggerPagesBuild() {
 </body>
 
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
