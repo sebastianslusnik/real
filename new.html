@@ -618,13 +618,6 @@ async function triggerPagesBuild() {
 				createdAt: new Date().toISOString()
 			}
 			list.push(item)
-			await saveListings(list)
-			try {
-			await triggerPagesBuild();
-			setStatus('Sikeres mentés. Új build indítva – 1-2 perc és megjelenik a publikus oldalon.', 'ok');
-			} catch (e) {
-			setStatus('Mentés sikeres, de a publikálás indítása nem sikerült. Indítsa kézzel az Actions-ben.', 'err');
-			}
 			setStatus('Sikeres mentés', 'ok')
 			document.getElementById('title').value = '';
 			document.getElementById('price').value = '';
@@ -639,7 +632,14 @@ async function triggerPagesBuild() {
 			document.getElementById('desc').value = ''
 			queuedFiles = [];
 			renderPreviews();
-			photoCount.textContent = '0 kiválasztva'
+			photoCount.textContent = '0 kiválasztva';			
+			await saveListings(list)
+			try {
+			await triggerPagesBuild();
+			setStatus('Sikeres mentés. Új build indítva – 1-2 perc és megjelenik a publikus oldalon.', 'ok');
+			} catch (e) {
+			setStatus('Mentés sikeres, de a publikálás indítása nem sikerült. Indítsa kézzel az Actions-ben.', 'err');
+			}
 		} catch (e) {
 			setStatus('Hiba: ' + (e && e.message ? e.message : 'Nem sikerült menteni'), 'err')
 		} finally {
@@ -650,6 +650,7 @@ async function triggerPagesBuild() {
 </body>
 
 </html>
+
 
 
 
