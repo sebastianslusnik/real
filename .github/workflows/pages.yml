@@ -21,9 +21,9 @@ build:
 runs-on: ubuntu-latest
 steps:
 - name: Checkout
-uses: actions/checkout@b4ffde65f46336ab88eb53be808477a54309eb2b
+  uses: actions/checkout@b4ffde65f46336ab88eb53be808477a54309eb2b
 - name: Setup Node
-uses: actions/setup-node@b4ffde65f46336ab88eb53be808477a54309eb2b
+  uses: actions/setup-node@b4ffde65f46336ab88eb53be808477a54309eb2b
   with:
     node-version: 20
 - name: Fetch data from JSONBin
