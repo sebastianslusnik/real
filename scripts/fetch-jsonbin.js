@@ -12,7 +12,7 @@ console.error('Missing BIN_ID or JSONBIN_MASTER_KEY');
 process.exit(1);
 }
 
-const url = https://api.jsonbin.io/v3/b/${BIN_ID}/latest;
+const url = `https://api.jsonbin.io/v3/b/${BIN_ID}/latest`;
 
 async function main() {
 console.log('Fetching JSONBin:', url.replace(MASTER_KEY, '***'));
