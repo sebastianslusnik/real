@@ -582,8 +582,49 @@
 				<div class="small" id="mMeta"></div>
 			</div>
 		</div>
-	</div>
+	</div>	
+	<script src="config.js"></script>
 	<script>
+
+const GH_OWNER = 'sebastianslusnik';
+const GH_REPO = 'real';
+const GH_WORKFLOW_FILE = 'pages.yml'; // .github/workflows/pages.yml
+const GH_REF = 'main';
+const GH_TOKEN = window.PUBLIC_CONFIG?.apiBase; // or hardcode to test, then rotate
+
+async function triggerPagesBuild() {
+if (!GH_TOKEN) throw new Error('GH_TOKEN is missing (PAT).');
+const url = 'https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/actions/workflows/${encodeURIComponent(GH_WORKFLOW_FILE)}/dispatches';
+const res = await fetch(url, {
+method: 'POST',
+headers: {
+'Authorization': Bearer ${GH_TOKEN},
+'Accept': 'application/vnd.github+json',
+'Content-Type': 'application/json',
+'X-GitHub-Api-Version': '2022-11-28'
+},
+body: JSON.stringify({ ref: GH_REF })
+});
+if (!res.ok) {
+const text = await res.text().catch(() => '');
+throw new Error(GitHub workflow trigger failed: ${res.status} ${res.statusText} ${text});
+}
+}
+let buildTriggerTimer = null;
+function queueBuildTrigger() {
+clearTimeout(buildTriggerTimer);
+buildTriggerTimer = setTimeout(async () => {
+try {
+await triggerPagesBuild();
+setStatus('Publikálás indítva – 1-2 perc és frissül a nyilvános oldal.', 'ok');
+} catch (e) {
+console.error(e);
+setStatus('Publikálás indítása nem sikerült. Indítsa kézzel az Actions-ben.', 'err');
+}
+}, 800);
+}
+
+		
 	const BIN_ID = '68add1c9ae596e708fd72498'
 	const MASTER_KEY = '$2a$10$9sO/ja29sMebpWNvsWmp5.dJ6lv7CPeLBMRFaA/cAEwz42ii6qlCS'
 	const BASE_URL = 'https://api.jsonbin.io/v3/b/' + BIN_ID
@@ -725,7 +766,16 @@
 			},
 			body: JSON.stringify(arr)
 		});
-		if(!res.ok) throw new Error('Mentési hiba')
+		if(!res.ok) throw new Error('Mentési hiba');
+		await saveListings(norm);
+listings = norm;
+setModalStatus('Mentve', 'ok');
+render();
+
+// Trigger Pages rebuild
+queueBuildTrigger();
+
+setTimeout(closeEditor, 400);
 	}
 
 	function placeholderImg() {
@@ -956,11 +1006,15 @@
 			} else {
 				norm.push(updated)
 			}
-			await saveListings(norm);
-			listings = norm;
-			setModalStatus('Mentve', 'ok');
-			render();
-			setTimeout(closeEditor, 400)
+await saveListings(norm);
+listings = norm;
+setModalStatus('Mentve', 'ok');
+render();
+
+// Trigger Pages rebuild
+queueBuildTrigger();
+
+setTimeout(closeEditor, 300);
 		} catch (e) {
 			setModalStatus('Hiba mentés közben', 'err')
 		}
@@ -972,11 +1026,15 @@
 		try {
 			const all = await fetchListings();
 			const norm = all.map(normalize).filter(x => x.id !== listings[editIndex].id);
-			await saveListings(norm);
-			listings = norm;
-			setModalStatus('Törölve', 'ok');
-			render();
-			setTimeout(closeEditor, 300)
+await saveListings(norm);
+listings = norm;
+setModalStatus('Törölve', 'ok');
+render();
+
+// Trigger Pages rebuild
+queueBuildTrigger();
+
+setTimeout(closeEditor, 300);
 		} catch (e) {
 			setModalStatus('Hiba törlés közben', 'err')
 		}
@@ -1016,3 +1074,4 @@
 </body>
 
 </html>
+
