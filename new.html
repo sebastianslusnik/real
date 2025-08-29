@@ -398,7 +398,7 @@ async function triggerPagesBuild() {
 	if (!GH_TOKEN) {
 		throw new Error('GH_TOKEN is missing. Make sure config.js provides a PAT.');
 	}
-  const url = `https://api.github.com/repos/sebastianslusnik/real/actions/workflows/17331109463/dispatches`;
+  const url = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/actions/workflows/${encodeURIComponent(GH_WORKFLOW_FILE)}/dispatches;`;
 
   const res = await fetch(url, {
     method: 'POST',
@@ -655,6 +655,7 @@ async function triggerPagesBuild() {
 </body>
 
 </html>
+
 
 
 
