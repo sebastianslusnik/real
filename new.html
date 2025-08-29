@@ -389,7 +389,7 @@ const GH_OWNER = 'sebastianslusnik';
 const GH_REPO = 'real';
 const GH_WORKFLOW_FILE = 'pages.yml'; // .github/workflows/pages.yml
 const GH_REF = 'main'; // branch to build
-const GH_TOKEN = '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'; // keep this secret!
+const GH_TOKEN = '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'; // keep this secret!
 
 async function triggerPagesBuild() {
   const url = `https://api.github.com/repos/sebastianslusnik/real/actions/workflows/17331109463/dispatches`;
@@ -397,7 +397,7 @@ async function triggerPagesBuild() {
   const res = await fetch(url, {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer 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`,
+      'Authorization': `Bearer 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`,
       'Accept': 'application/vnd.github+json',
       'Content-Type': 'application/json'
     },
@@ -648,6 +648,7 @@ async function triggerPagesBuild() {
 </body>
 
 </html>
+
 
 
 
