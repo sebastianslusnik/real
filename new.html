@@ -384,14 +384,15 @@
 		</div>
 	</div>
 	<script src="config.js"></script>
-	<script>console.log('PUBLIC_API_BASE:', window.PUBLIC_CONFIG?.apiBase);</script>
+	<script>console.log("wow");</script>
 	<script>
 
 const GH_OWNER = 'sebastianslusnik';
 const GH_REPO = 'real';
 const GH_WORKFLOW_FILE = 'pages.yml'; // .github/workflows/pages.yml
 const GH_REF = 'main'; // branch to build
-const GH_TOKEN = window.PUBLIC_CONFIG?.ghToken || ''; console.log('GH_TOKEN:', GH_TOKEN); // set in GitHub Secrets
+const GH_TOKEN = 'PUBLIC_API_BASE:', window.PUBLIC_CONFIG?.apiBase;
+console.log('GH_TOKEN:', GH_TOKEN); // set in GitHub Secrets
 
 async function triggerPagesBuild() {
   const url = `https://api.github.com/repos/sebastianslusnik/real/actions/workflows/17331109463/dispatches`;
@@ -650,6 +651,7 @@ async function triggerPagesBuild() {
 </body>
 
 </html>
+
 
 
 
