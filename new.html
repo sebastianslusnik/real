@@ -392,7 +392,7 @@ const GH_REF = 'main'; // branch to build
 const GH_TOKEN = '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'; // keep this secret!
 
 async function triggerPagesBuild() {
-  const url = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/actions/workflows/${encodeURIComponent(GH_WORKFLOW_FILE)}/dispatches`;
+  const url = `https://api.github.com/repos/sebastianslusnik/real/actions/workflows/17331109463/dispatches`;
 
   const res = await fetch(url, {
     method: 'POST',
@@ -401,12 +401,11 @@ async function triggerPagesBuild() {
       'Accept': 'application/vnd.github+json',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ ref: GH_REF })
+    body: JSON.stringify({ ref: main })
   });
 
   if (!res.ok) {
     const text = await res.text().catch(() => '');
-    throw new Error(`GitHub workflow trigger failed: ${res.status} ${res.statusText} ${text}`);
   }
 }
 		
@@ -648,6 +647,7 @@ async function triggerPagesBuild() {
 </body>
 
 </html>
+
 
 
 
