@@ -598,7 +598,7 @@ const url = 'https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/actions/workflo
 const res = await fetch(url, {
 method: 'POST',
 headers: {
-'Authorization': Bearer ${GH_TOKEN},
+'Authorization': `Bearer ${GH_TOKEN}`,
 'Accept': 'application/vnd.github+json',
 'Content-Type': 'application/json',
 'X-GitHub-Api-Version': '2022-11-28'
@@ -1074,4 +1074,5 @@ setTimeout(closeEditor, 300);
 </body>
 
 </html>
+
 
