@@ -495,7 +495,7 @@
 	const GH_REPO = 'real';
 	const GH_WORKFLOW_FILE = 'pages.yml'; // .github/workflows/pages.yml
 	const GH_REF = 'main'; // branch to build
-	const GH_TOKEN = window.PUBLIC_CONFIG ? .apiBase;
+	const GH_TOKEN = window.PUBLIC_CONFIG?.apiBase;
 	async function triggerPagesBuild() {
 		if(!GH_TOKEN) {
 			throw new Error('GH_TOKEN is missing. Make sure config.js provides a PAT.');
@@ -756,4 +756,5 @@
 </body>
 
 </html>
+
 
