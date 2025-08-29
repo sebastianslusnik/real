@@ -641,9 +641,9 @@ async function triggerPagesBuild() {
 			await saveListings(list)
 			try {
 			await triggerPagesBuild();
-			setStatus('Sikeres mentés. Új build indítva – 1-2 perc és megjelenik a publikus oldalon.', 'ok');
+			setStatus('Sikeres mentés... 1-2 perc múlva megjelenik az oldalon.', 'ok');
 			} catch (e) {
-			setStatus('Mentés sikeres, de a publikálás indítása nem sikerült. Indítsa kézzel az Actions-ben.', 'err');
+			setStatus('A mentés SIKERES volt, de a publikálás indítása nem sikerült.', 'err');
 			}
 		} catch (e) {
 			setStatus('Hiba: ' + (e && e.message ? e.message : 'Nem sikerült menteni'), 'err')
@@ -655,6 +655,7 @@ async function triggerPagesBuild() {
 </body>
 
 </html>
+
 
 
 
