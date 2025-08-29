@@ -1368,14 +1368,28 @@ mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'
   -webkit-animation: animate-svg-stroke-14 1s cubic-bezier(0.47, 0, 0.745, 0.715) 1.56s both;
           animation: animate-svg-stroke-14 1s cubic-bezier(0.47, 0, 0.745, 0.715) 1.56s both;
 }
+.loader-wrapper {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: #fa943f;
+    z-index: 9999;
+}
 
+.loader {
+    height: 5px;
+    background-color: #fff;
+    position: absolute;
+    z-index: 9999;
+  border-radius:6px;
+}
 
     </style>
   </head>
 
   <body>
 
-  <div id="erste">
+  <div class="loader-wrapper">
   <svg class="house-byh-loader is-animating" id="Calque_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 376 272" width="100" height="73">
     <defs>
       <style>
@@ -1405,6 +1419,7 @@ mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'
       <polyline class="cls-1 svg-elem-14" points="208 32 360 32 360 104 280 104 184 8"></polyline>
     </g>
   </svg>
+<div class="loader"></div>
 </div>
   <div id="zweite">
     <header class="header">
@@ -2469,10 +2484,44 @@ setInterval(toggleAnimatingClass, 2500);
         applyFilters()
       }
       init()
+        
+    jQuery(window).on('load', function(){
+    var loader = $(".loader");
+    var wHeight = $(window).height();
+    var wWidth = $(window).width();
+    var o = 0;
+  
+    loader.css({
+        top: wHeight / 2 - 2.5,
+        left: wWidth / 2 - 200
+    })
+
+    do {
+        loader.animate({
+            width: o
+        }, 10)
+        o += 3;
+    } while (o <= 400)
+    if (o === 402) {
+        loader.animate({
+            left: 0,
+            width: '100%'
+        })
+        loader.animate({
+            top: '0',
+            height: '100vh'
+        })
+      setTimeout(function(){
+       jQuery(".loader-wrapper").fadeOut(500);
+       jQuery(".loader").fadeOut(500);
+      }, 3000)
+    }
+ })
     </script>
   </body>
 
 </html>
+
 
 
 
