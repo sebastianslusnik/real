@@ -50,6 +50,12 @@ jobs:
           PUBLIC_FEATURE_FLAG: ${{ vars.PUBLIC_FEATURE_FLAG }}
         run: |
           node -e "const fs=require('fs'); const cfg={ apiBase: process.env.PUBLIC_API_BASE || '', featureFlag: process.env.PUBLIC_FEATURE_FLAG || '' }; fs.writeFileSync('dist/config.js', 'window.PUBLIC_CONFIG = ' + JSON.stringify(cfg) + ';\n');"
+      
+      - name: Inject public pass
+        env:
+          PASSWORD: ${{ vars.PASSWORD }}
+        run: |
+          node -e "const fs=require('fs'); const cfg={ pass: process.env.PASSWORD || '' }; fs.writeFileSync('dist/config.js', 'window.PUBLIC_PASS = ' + JSON.stringify(cfg) + ';\n');"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
