@@ -25,7 +25,7 @@ headers: {
 
 if (!res.ok) {
 const text = await res.text().catch(() => '');
-throw new Error(JSONBin request failed: ${res.status} ${res.statusText} ${text});
+throw new Error(`JSONBin request failed: ${res.status} ${res.statusText} ${text}`);
 }
 
 const body = await res.json();
@@ -37,7 +37,6 @@ await fs.promises.mkdir(outDir, { recursive: true });
 
 const outFile = path.join(outDir, 'listings.json');
 await fs.promises.writeFile(outFile, JSON.stringify(arr, null, 2));
-console.log(Wrote ${arr.length} records to ${outFile});
 }
 
 main().catch((err) => {
