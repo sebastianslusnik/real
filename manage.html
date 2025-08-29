@@ -607,7 +607,7 @@ body: JSON.stringify({ ref: GH_REF })
 });
 if (!res.ok) {
 const text = await res.text().catch(() => '');
-throw new Error(GitHub workflow trigger failed: ${res.status} ${res.statusText} ${text});
+throw new Error(`GitHub workflow trigger failed: ${res.status} ${res.statusText} ${text}`);
 }
 }
 let buildTriggerTimer = null;
@@ -1074,5 +1074,6 @@ setTimeout(closeEditor, 300);
 </body>
 
 </html>
+
 
 
