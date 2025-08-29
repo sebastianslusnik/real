@@ -748,7 +748,8 @@
 				await triggerPagesBuild();
 				setStatus('Sikeres mentés... 1-2 perc múlva megjelenik az oldalon.', 'ok');
 			} catch (e) {
-				setStatus('A mentés SIKERES volt, de a publikálás indítása nem sikerült.', 'err');
+				console.error('Workflow trigger failed:', e);
+				setStatus('A mentés SIKERES volt, de a publikálás indítása nem sikerült: ' + (e?.message || ''), 'err');
 			}
 		} catch (e) {
 			setStatus('Hiba: ' + (e && e.message ? e.message : 'Nem sikerült menteni'), 'err')
@@ -760,6 +761,7 @@
 </body>
 
 </html>
+
 
 
 
