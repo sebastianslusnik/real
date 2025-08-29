@@ -389,7 +389,7 @@ const GH_OWNER = 'sebastianslusnik';
 const GH_REPO = 'real';
 const GH_WORKFLOW_FILE = 'pages.yml'; // .github/workflows/pages.yml
 const GH_REF = 'main'; // branch to build
-const GH_TOKEN = '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'; // fine-grained or classic
+const GH_TOKEN = 'your_classic_token_here'; // keep this secret!
 
 async function triggerPagesBuild() {
   const url = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/actions/workflows/${encodeURIComponent(GH_WORKFLOW_FILE)}/dispatches`;
@@ -397,7 +397,7 @@ async function triggerPagesBuild() {
   const res = await fetch(url, {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${GH_TOKEN}`,
+      'Authorization': `token ${GH_TOKEN}`,
       'Accept': 'application/vnd.github+json',
       'Content-Type': 'application/json'
     },
@@ -406,7 +406,7 @@ async function triggerPagesBuild() {
 
   if (!res.ok) {
     const text = await res.text().catch(() => '');
-    throw new Error(`JSONBin request failed: ${res.status} ${res.statusText} ${text}`);
+    throw new Error(`GitHub workflow trigger failed: ${res.status} ${res.statusText} ${text}`);
   }
 }
 		
@@ -648,6 +648,7 @@ async function triggerPagesBuild() {
 </body>
 
 </html>
+
 
 
 
