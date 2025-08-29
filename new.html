@@ -418,7 +418,7 @@
 	<script src="config.js"></script>
 	<script>
 	document.addEventListener('DOMContentLoaded', () => {
-		const SECRET = window.PUBLIC_PASS ? .pass;
+		const SECRET = window.PUBLIC_PASS?.pass;
 		const input = document.getElementById('password');
 		const passContainer = document.getElementById('pass');
 		let restt = document.getElementById('application');
@@ -756,3 +756,4 @@
 </body>
 
 </html>
+
