@@ -409,13 +409,6 @@ async function triggerPagesBuild() {
     throw new Error(`JSONBin request failed: ${res.status} ${res.statusText} ${text}`);
   }
 }
-
-try {
-await triggerPagesBuild();
-setStatus('Sikeres mentés. Új build indítva – 1-2 perc és megjelenik a publikus oldalon.', 'ok');
-} catch (e) {
-setStatus('Mentés sikeres, de a publikálás indítása nem sikerült. Indítsa kézzel az Actions-ben.', 'err');
-}
 		
 	const BIN_ID = '68add1c9ae596e708fd72498'
 	const MASTER_KEY = '$2a$10$9sO/ja29sMebpWNvsWmp5.dJ6lv7CPeLBMRFaA/cAEwz42ii6qlCS'
@@ -649,6 +642,7 @@ setStatus('Mentés sikeres, de a publikálás indítása nem sikerült. Indítsa
 </body>
 
 </html>
+
 
 
 
