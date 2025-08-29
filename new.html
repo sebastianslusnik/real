@@ -291,6 +291,9 @@
 		font-size: 12px;
 		margin-top: 6px
 	}
+	#application {
+		display: none;
+	}
 	</style>
 </head>
 
@@ -305,9 +308,13 @@
 				<a class="link" href="index.html">Nyilvános oldal</a>
 				<a class="link" href="manage.html">Kezelés</a>
 				<a class="cta" href="new.html">Új ingatlan</a>
+				<a id="logout" type="button">Log off</a>
 			</div>
 		</div>
-		<div class="grid">
+		<div id="pass">
+			<input id="password" type="password" autocomplete="off" />
+		</div
+		<div id="application" class="grid">
 			<div class="card">
 				<h2>Ingatlan adatai</h2>
 				<div class="row">
@@ -384,6 +391,79 @@
 	</div>
 	<script src="config.js"></script>
 	<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		const SECRET = 'KomplexAdmin.';
+		const input = document.getElementById('password');
+		const passContainer = document.getElementById('pass');
+		let restt = document.getElementById('application');
+		const logoutBtn = document.getElementById('logout');
+		const placeholder = document.createComment('application-placeholder');
+if (restt && restt.parentNode) {
+restt.parentNode.replaceChild(placeholder, restt);
+}
+
+const loadStored = () => {
+const saved = localStorage.getItem('password') || '';
+if (saved) input.value = saved;
+};
+
+const authorized = () => input.value.includes(SECRET);
+
+function show() {
+if (!restt.isConnected && placeholder.parentNode) {
+placeholder.parentNode.insertBefore(restt, placeholder.nextSibling);
+}
+restt.style.setProperty('display', 'block', 'important');
+input.disabled = true;
+passContainer.style.setProperty('display', 'none', 'important');
+}
+
+function hide() {
+if (restt.isConnected && restt.parentNode) {
+restt.parentNode.replaceChild(placeholder, restt);
+}
+restt.style.setProperty('display', 'none', 'important');
+input.disabled = false;
+passContainer.style.removeProperty('display');
+}
+
+function sync() {
+if (authorized()) {
+localStorage.setItem('password', input.value);
+show();
+} else {
+hide();
+}
+}
+
+input.addEventListener('input', sync);
+input.addEventListener('change', sync);
+
+logoutBtn.addEventListener('click', () => {
+localStorage.removeItem('password');
+input.value = '';
+hide();
+});
+
+const mo = new MutationObserver(() => {
+if (!authorized()) {
+const el = document.getElementById('restt');
+if (el && el.isConnected) {
+el.parentNode.replaceChild(placeholder, el);
+}
+}
+});
+
+mo.observe(document.documentElement, {
+subtree: true,
+childList: true,
+attributes: true,
+attributeFilter: ['style', 'class', 'hidden']
+});
+
+loadStored();
+sync();
+});
 console.log(window.PUBLIC_PASS?.pass); // set in GitHub Secrets
 
 const GH_OWNER = 'sebastianslusnik';
@@ -653,6 +733,7 @@ async function triggerPagesBuild() {
 </body>
 
 </html>
+
 
 
 
