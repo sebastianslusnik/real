@@ -787,7 +787,6 @@ setStatus('Publikálás indítása nem sikerült. Indítsa kézzel az Actions-be
 	const mDelete = document.getElementById('mDelete')
 	const mStatus = document.getElementById('mStatus')
 	const mMeta = document.getElementById('mMeta')
-	const closeModalLeft = document.getElementById('closeModalLeft')
 	const closeModalRight = document.getElementById('closeModalRight')
 	let listings = []
 	let editIndex = -1
@@ -1162,7 +1161,6 @@ setStatus('Publikálás indítása nem sikerült. Indítsa kézzel az Actions-be
 		}
 	})
 	mCancel.addEventListener('click', closeEditor)
-	closeModalLeft.addEventListener('click', closeEditor)
 	closeModalRight.addEventListener('click', closeEditor)
 	document.addEventListener('keydown', e => {
 		if(e.key === 'Escape' && modal.classList.contains('open')) closeEditor()
@@ -1196,6 +1194,7 @@ setStatus('Publikálás indítása nem sikerült. Indítsa kézzel az Actions-be
 </body>
 
 </html>
+
 
 
 
