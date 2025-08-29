@@ -395,6 +395,9 @@ console.log('GH_TOKEN:', GH_TOKEN); // set in GitHub Secrets
 console.log(window.PUBLIC_CONFIG?.apiBase); // set in GitHub Secrets
 
 async function triggerPagesBuild() {
+	if (!GH_TOKEN) {
+		throw new Error('GH_TOKEN is missing. Make sure config.js provides a PAT.');
+	}
   const url = `https://api.github.com/repos/sebastianslusnik/real/actions/workflows/17331109463/dispatches`;
 
   const res = await fetch(url, {
@@ -402,9 +405,10 @@ async function triggerPagesBuild() {
     headers: {
       'Authorization': `Bearer ${GH_TOKEN}`,
       'Accept': 'application/vnd.github+json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+	  'X-GitHub-Api-Version': '2022-11-28'
     },
-    body: JSON.stringify({ ref: main })
+    body: JSON.stringify({ ref: 'main' })
   });
 
   if (!res.ok) {
@@ -651,6 +655,7 @@ async function triggerPagesBuild() {
 </body>
 
 </html>
+
 
 
 
