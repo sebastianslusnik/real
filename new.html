@@ -318,6 +318,11 @@
 		    transform: translate(-50%, -50%);
 		    filter: drop-shadow(2px 4px 6px #ddd);
 		">
+		<span style="
+		    position: absolute;
+		    margin: -25px 5px;
+		    font-weight: 600;
+		">Bejelentkezés</span>
 		<input id="password" type="password" autocomplete="off" style="
 		    font-size: 30px;
 		    padding: 5px 30px;
@@ -410,8 +415,10 @@
 		let restt = document.getElementById('application');
 		const logoutBtn = document.getElementById('logout');
 		const placeholder = document.createComment('application-placeholder');
+		const placeholderL = document.createComment('application-placeholder');
 if (restt && restt.parentNode) {
 restt.parentNode.replaceChild(placeholder, restt);
+logoutBtn.parentNode.replaceChild(placeholderL, logoutBtn);
 }
 
 const loadStored = () => {
@@ -424,8 +431,10 @@ const authorized = () => input.value.includes(SECRET);
 function show() {
 if (!restt.isConnected && placeholder.parentNode) {
 placeholder.parentNode.insertBefore(restt, placeholder.nextSibling);
+placeholderL.parentNode.insertBefore(logoutBtn, placeholderL.nextSibling);
 }
 restt.style.setProperty('display', 'inline-grid', 'important');
+logoutBtn.style.setProperty('display', 'inline-grid', 'important');
 input.disabled = true;
 passContainer.style.setProperty('display', 'none', 'important');
 }
@@ -433,8 +442,10 @@ passContainer.style.setProperty('display', 'none', 'important');
 function hide() {
 if (restt.isConnected && restt.parentNode) {
 restt.parentNode.replaceChild(placeholder, restt);
+logoutBtn.parentNode.replaceChild(placeholderL, logoutBtn);
 }
 restt.style.setProperty('display', 'none', 'important');
+logoutBtn.style.setProperty('display', 'none', 'important');
 input.disabled = false;
 passContainer.style.removeProperty('display');
 }
@@ -460,8 +471,10 @@ hide();
 const mo = new MutationObserver(() => {
 if (!authorized()) {
 const el = document.getElementById('application');
+const el2 = document.getElementById('logoutBtn');
 if (el && el.isConnected) {
 el.parentNode.replaceChild(placeholder, el);
+el2.parentNode.replaceChild(placeholderL, el2);
 }
 }
 });
@@ -744,6 +757,7 @@ async function triggerPagesBuild() {
 </body>
 
 </html>
+
 
 
 
