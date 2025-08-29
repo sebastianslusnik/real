@@ -406,6 +406,7 @@ async function triggerPagesBuild() {
 
   if (!res.ok) {
     const text = await res.text().catch(() => '');
+	throw new Error(`GitHub workflow trigger failed: ${res.status} ${res.statusText} ${text}`);
   }
 }
 		
@@ -647,6 +648,7 @@ async function triggerPagesBuild() {
 </body>
 
 </html>
+
 
 
 
