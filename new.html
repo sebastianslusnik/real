@@ -391,8 +391,9 @@ const GH_OWNER = 'sebastianslusnik';
 const GH_REPO = 'real';
 const GH_WORKFLOW_FILE = 'pages.yml'; // .github/workflows/pages.yml
 const GH_REF = 'main'; // branch to build
-const GH_TOKEN = 'PUBLIC_API_BASE:', window.PUBLIC_CONFIG?.apiBase;
+const GH_TOKEN = window.PUBLIC_CONFIG?.apiBase;
 console.log('GH_TOKEN:', GH_TOKEN); // set in GitHub Secrets
+console.log(window.PUBLIC_CONFIG?.apiBase); // set in GitHub Secrets
 
 async function triggerPagesBuild() {
   const url = `https://api.github.com/repos/sebastianslusnik/real/actions/workflows/17331109463/dispatches`;
@@ -651,6 +652,7 @@ async function triggerPagesBuild() {
 </body>
 
 </html>
+
 
 
 
