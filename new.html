@@ -383,16 +383,14 @@
 		</div>
 	</div>
 	<script src="config.js"></script>
-	<script>console.log("wow");</script>
 	<script>
+console.log(window.PUBLIC_PASS?.pass); // set in GitHub Secrets
 
 const GH_OWNER = 'sebastianslusnik';
 const GH_REPO = 'real';
 const GH_WORKFLOW_FILE = 'pages.yml'; // .github/workflows/pages.yml
 const GH_REF = 'main'; // branch to build
 const GH_TOKEN = window.PUBLIC_CONFIG?.apiBase;
-console.log('GH_TOKEN:', GH_TOKEN); // set in GitHub Secrets
-console.log(window.PUBLIC_CONFIG?.apiBase); // set in GitHub Secrets
 
 async function triggerPagesBuild() {
 	if (!GH_TOKEN) {
@@ -655,6 +653,7 @@ async function triggerPagesBuild() {
 </body>
 
 </html>
+
 
 
 
