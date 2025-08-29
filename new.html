@@ -313,7 +313,7 @@
 		</div>
 		<div id="pass">
 			<input id="password" type="password" autocomplete="off" />
-		</div
+		</div>
 		<div id="application" class="grid">
 			<div class="card">
 				<h2>Ingatlan adatai</h2>
@@ -447,7 +447,7 @@ hide();
 
 const mo = new MutationObserver(() => {
 if (!authorized()) {
-const el = document.getElementById('restt');
+const el = document.getElementById('application');
 if (el && el.isConnected) {
 el.parentNode.replaceChild(placeholder, el);
 }
@@ -733,6 +733,7 @@ async function triggerPagesBuild() {
 </body>
 
 </html>
+
 
 
 
