@@ -392,7 +392,7 @@
 	<script src="config.js"></script>
 	<script>
 	document.addEventListener('DOMContentLoaded', () => {
-		const SECRET = 'KomplexAdmin.';
+		const SECRET = window.PUBLIC_PASS?.pass;
 		const input = document.getElementById('password');
 		const passContainer = document.getElementById('pass');
 		let restt = document.getElementById('application');
@@ -413,7 +413,7 @@ function show() {
 if (!restt.isConnected && placeholder.parentNode) {
 placeholder.parentNode.insertBefore(restt, placeholder.nextSibling);
 }
-restt.style.setProperty('display', 'block', 'important');
+restt.style.setProperty('display', 'inline-grid', 'important');
 input.disabled = true;
 passContainer.style.setProperty('display', 'none', 'important');
 }
@@ -464,7 +464,6 @@ attributeFilter: ['style', 'class', 'hidden']
 loadStored();
 sync();
 });
-console.log(window.PUBLIC_PASS?.pass); // set in GitHub Secrets
 
 const GH_OWNER = 'sebastianslusnik';
 const GH_REPO = 'real';
@@ -733,6 +732,7 @@ async function triggerPagesBuild() {
 </body>
 
 </html>
+
 
 
 
