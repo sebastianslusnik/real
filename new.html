@@ -384,6 +384,38 @@
 		</div>
 	</div>
 	<script>
+
+const GH_OWNER = 'sebastianslusnik';
+const GH_REPO = 'real';
+const GH_WORKFLOW_FILE = 'pages.yml'; // .github/workflows/pages.yml
+const GH_REF = 'main'; // branch to build
+const GH_TOKEN = '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'; // fine-grained or classic
+
+async function triggerPagesBuild() {
+const url = 'https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/actions/workflows/${encodeURIComponent(GH_WORKFLOW_FILE)}/dispatches';
+const res = await fetch(url, {
+method: 'POST',
+headers: {
+'Authorization': Bearer ${GH_TOKEN},
+'Accept': 'application/vnd.github+json',
+'Content-Type': 'application/json'
+},
+body: JSON.stringify({ ref: GH_REF })
+});
+if (!res.ok) {
+const text = await res.text().catch(() => '');
+}
+}
+
+await saveListings(list);
+
+try {
+await triggerPagesBuild();
+setStatus('Sikeres mentés. Új build indítva – 1-2 perc és megjelenik a publikus oldalon.', 'ok');
+} catch (e) {
+setStatus('Mentés sikeres, de a publikálás indítása nem sikerült. Indítsa kézzel az Actions-ben.', 'err');
+}
+		
 	const BIN_ID = '68add1c9ae596e708fd72498'
 	const MASTER_KEY = '$2a$10$9sO/ja29sMebpWNvsWmp5.dJ6lv7CPeLBMRFaA/cAEwz42ii6qlCS'
 	const BASE_URL = 'https://api.jsonbin.io/v3/b/' + BIN_ID
@@ -616,3 +648,4 @@
 </body>
 
 </html>
+
