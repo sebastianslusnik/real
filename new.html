@@ -410,8 +410,6 @@ async function triggerPagesBuild() {
   }
 }
 
-await saveListings(list);
-
 try {
 await triggerPagesBuild();
 setStatus('Sikeres mentés. Új build indítva – 1-2 perc és megjelenik a publikus oldalon.', 'ok');
@@ -651,5 +649,6 @@ setStatus('Mentés sikeres, de a publikálás indítása nem sikerült. Indítsa
 </body>
 
 </html>
+
 
 
