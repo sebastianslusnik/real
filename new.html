@@ -311,8 +311,20 @@
 				<a id="logout" type="button">Log off</a>
 			</div>
 		</div>
-		<div id="pass">
-			<input id="password" type="password" autocomplete="off" />
+		<div id="pass" style="
+		    position: absolute;
+		    top: 50%;
+		    left: 50%;
+		    transform: translate(-50%, -50%);
+		    filter: drop-shadow(2px 4px 6px #ddd);
+		">
+		<input id="password" type="password" autocomplete="off" style="
+		    font-size: 30px;
+		    padding: 5px 30px;
+		    border: 1px solid #eee;
+		    width: 230px;
+		    text-align: center;
+		">
 		</div>
 		<div id="application" class="grid">
 			<div class="card">
@@ -732,6 +744,7 @@ async function triggerPagesBuild() {
 </body>
 
 </html>
+
 
 
 
