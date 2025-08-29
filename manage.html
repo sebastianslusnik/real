@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="utf-8">
-	<title>Realty • Ingatlanok kezelése</title>
+	<title>KomplexIngatlan • Kezelés</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="icon" type="image/png" href="https://static.vecteezy.com/system/resources/thumbnails/028/653/450/small_2x/yellow-orange-circle-sun-icon-png.png" />
 	<style>
@@ -12,7 +12,7 @@
 		--card: #ffffff;
 		--muted: #667085;
 		--text: #0b1320;
-		--primary: #f97316;
+		--primary: #fa943f;
 		--primary-600: #ea580c;
 		--border: #efe7dc;
 		--chip: #fff7ed;
@@ -22,14 +22,15 @@
 	}
 
 	* {
-		box-sizing: border-box
+		box-sizing: border-box;
+		font-family: 'Inter' !important;
 	}
 
 	body {
 		margin: 0;
 		background: var(--bg);
 		color: var(--text);
-		font-family: Inter, ui-sans-serif, system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif
+		font-family: Inter
 	}
 
 	a {
@@ -57,23 +58,29 @@
 	}
 
 	.logo {
-		width: 32px;
-		height: 32px;
-		border-radius: 8px;
-		background: linear-gradient(135deg, #fb923c, #f59e0b)
+		width: 48px;
+		height: 48px;
+		border-radius: 50%;
+		background-image: url(favii.png);
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: contain;
 	}
 
 	.brand h1 {
 		font-size: 18px;
-		margin: 0
+		margin: 0;
+		font-weight: 800
 	}
 
 	.header a {
 		color: #1f2937;
 		background: #fff;
 		border: 1px solid var(--border);
-		padding: 9px 12px;
-		border-radius: 10px
+		padding: 10px 16px;
+		border-radius: 8px;
+		font-weight: 600;
+		font-size: 14px;
 	}
 
 	.header a.cta {
@@ -112,7 +119,7 @@
 	.btn {
 		appearance: none;
 		border: none;
-		border-radius: 10px;
+		border-radius: 8px;
 		padding: 10px 14px;
 		font-weight: 700;
 		cursor: pointer;
@@ -467,6 +474,13 @@
     	position: relative;
     	top: -38px;
 	}
+
+	#application {
+		display: none;
+	}
+	#logout {
+		cursor: pointer;
+	}
 	</style>
 </head>
 
@@ -475,14 +489,37 @@
 		<div class="header">
 			<div class="brand">
 				<div class="logo"></div>
-				<h1>Ingatlanok kezelése</h1>
+				<h1>Komplex<span style="font-weight:300">Ingatlan</span>.com</h1>
 			</div>
 			<div style="display:flex;gap:8px">
-				<a href="index.html">Nyilvános oldal</a>
-				<a href="new.html" class="cta">Új ingatlan</a>
+				<a class="link" href="index.html">Nyilvános oldal</a>
+				<a class="cta" href="manage.html">Kezelés</a>
+				<a class="link" href="new.html">Új ingatlan</a>
+				<a id="logout" type="button">Log off</a>
 			</div>
 		</div>
-		<div class="toolbar">
+		<div id="pass" style="
+		    position: absolute;
+		    top: 50%;
+		    left: 50%;
+		    transform: translate(-50%, -50%);
+		    filter: drop-shadow(2px 4px 6px #ddd);
+		">
+			<span style="
+		    position: absolute;
+		    margin: -25px 5px;
+		    font-weight: 600;
+		">Bejelentkezés</span>
+			<input id="password" type="password" autocomplete="off" style="
+			font-size: 25px;
+		    padding: 5px 10px 8px 10px;
+		    border: 1px solid #eee;
+		    width: 240px;
+		    text-align: center;
+		    border-radius: 8px;
+		">
+		</div>
+		<div id="tool" class="toolbar">
 			<input id="q" class="search" placeholder="Keresés cím, város, megye szerint">
 			<select id="filterType">
 				<option value="">Összes típus</option>
@@ -590,6 +627,89 @@
 	</div>	
 	<script src="config.js"></script>
 	<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		const SECRET = window.PUBLIC_PASS?.pass;
+		const input = document.getElementById('password');
+		const passContainer = document.getElementById('pass');
+		let restt = document.getElementById('grid');
+		let restt2 = document.getElementById('tool');
+		const logoutBtn = document.getElementById('logout');
+		const placeholder = document.createComment('application-placeholder');
+		const placeholderL = document.createComment('application-placeholder');
+		const placeholder2 = document.createComment('application-placeholder');
+		if(restt && restt.parentNode) {
+			restt.parentNode.replaceChild(placeholder, restt);
+			restt2.parentNode.replaceChild(placeholder2, restt2);
+			logoutBtn.parentNode.replaceChild(placeholderL, logoutBtn);
+		}
+		const loadStored = () => {
+			const saved = localStorage.getItem('password') || '';
+			if(saved) input.value = saved;
+		};
+		const authorized = () => input.value.includes(SECRET);
+
+		function show() {
+			if(!restt.isConnected && placeholder.parentNode) {
+				placeholder.parentNode.insertBefore(restt, placeholder.nextSibling);
+				placeholder2.parentNode.insertBefore(restt2, placeholder2.nextSibling);
+				placeholderL.parentNode.insertBefore(logoutBtn, placeholderL.nextSibling);
+			}
+			restt.style.setProperty('display', 'inline-grid', 'important');
+			restt2.style.setProperty('display', 'inline-grid', 'important');
+			logoutBtn.style.setProperty('display', 'inline-grid', 'important');
+			input.disabled = true;
+			passContainer.style.setProperty('display', 'none', 'important');
+		}
+
+		function hide() {
+			if(restt.isConnected && restt.parentNode) {
+				restt.parentNode.replaceChild(placeholder, restt);
+				restt2.parentNode.replaceChild(placeholder2, restt2);
+				logoutBtn.parentNode.replaceChild(placeholderL, logoutBtn);
+			}
+			restt.style.setProperty('display', 'none', 'important');
+			restt2.style.setProperty('display', 'none', 'important');
+			logoutBtn.style.setProperty('display', 'none', 'important');
+			input.disabled = false;
+			passContainer.style.removeProperty('display');
+		}
+
+		function sync() {
+			if(authorized()) {
+				localStorage.setItem('password', input.value);
+				show();
+			} else {
+				hide();
+			}
+		}
+		input.addEventListener('input', sync);
+		input.addEventListener('change', sync);
+		logoutBtn.addEventListener('click', () => {
+			localStorage.removeItem('password');
+			input.value = '';
+			hide();
+		});
+		const mo = new MutationObserver(() => {
+			if(!authorized()) {
+				const el = document.getElementById('grid');
+				const el2 = document.getElementById('logoutBtn');
+				const el3 = document.getElementById('tool');
+				if(el && el.isConnected) {
+					el.parentNode.replaceChild(placeholder, el);
+					el2.parentNode.replaceChild(placeholderL, el2);
+					el3.parentNode.replaceChild(placeholder2, el3);
+				}
+			}
+		});
+		mo.observe(document.documentElement, {
+			subtree: true,
+			childList: true,
+			attributes: true,
+			attributeFilter: ['style', 'class', 'hidden']
+		});
+		loadStored();
+		sync();
+	});
 
 const GH_OWNER = 'sebastianslusnik';
 const GH_REPO = 'real';
@@ -1070,6 +1190,7 @@ setStatus('Publikálás indítása nem sikerült. Indítsa kézzel az Actions-be
 </body>
 
 </html>
+
 
 
 
