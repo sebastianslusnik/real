@@ -617,6 +617,12 @@ async function triggerPagesBuild() {
 			}
 			list.push(item)
 			await saveListings(list)
+			try {
+			await triggerPagesBuild();
+			setStatus('Sikeres mentés. Új build indítva – 1-2 perc és megjelenik a publikus oldalon.', 'ok');
+			} catch (e) {
+			setStatus('Mentés sikeres, de a publikálás indítása nem sikerült. Indítsa kézzel az Actions-ben.', 'err');
+			}
 			setStatus('Sikeres mentés', 'ok')
 			document.getElementById('title').value = '';
 			document.getElementById('price').value = '';
@@ -642,6 +648,7 @@ async function triggerPagesBuild() {
 </body>
 
 </html>
+
 
 
 
