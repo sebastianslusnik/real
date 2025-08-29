@@ -1682,10 +1682,6 @@ function toggleAnimatingClass() {
 // Call the function every two and half seconds
 setInterval(toggleAnimatingClass, 2500);
 
-      
-      const BIN_ID = '68add1c9ae596e708fd72498'
-      const MASTER_KEY = '$2a$10$9sO/ja29sMebpWNvsWmp5.dJ6lv7CPeLBMRFaA/cAEwz42ii6qlCS'
-      const BASE_URL = 'https://api.jsonbin.io/v3/b/' + BIN_ID
       const EUR_TO_HUF = 390
       const BUSINESS_ADDRESS = 'Magyar utca, Mosonmagyaróvár, Magyarország'
       const FALLBACK_LAT = 47.8712
@@ -1951,19 +1947,16 @@ setInterval(toggleAnimatingClass, 2500);
         }
       }
       async function fetchListings() {
-        const r = await fetch(BASE_URL + '/latest', {
-          headers: {
-            'X-Master-Key': MASTER_KEY,
-            'Content-Type': 'application/json'
-          }
-        })
-        if (!r.ok) {
-          if (r.status === 404) return [];
-          throw new Error('Failed')
-        }
-        const j = await r.json()
-        return Array.isArray(j.record) ? j.record : []
-      }
+// This is now a simple local fetch; no secrets needed
+const r = await fetch('./data/listings.json', {
+headers: { 'Accept': 'application/json' },
+cache: 'no-store'
+});
+if (!r.ok) return [];
+const arr = await r.json();
+// arr is the raw array we saved from JSONBin; keep normalize() as you already do
+return Array.isArray(arr) ? arr : [];
+}
 
       function applyFilters() {
         const term = (els.q.value || '').trim().toLowerCase()
@@ -2523,6 +2516,7 @@ setInterval(toggleAnimatingClass, 2500);
   </body>
 
 </html>
+
 
 
 
