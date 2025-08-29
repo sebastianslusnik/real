@@ -1,11 +1,12 @@
-name: Build and deploy to GitHub Pages
+File: .github/workflows/pages.yml
 
+name: Build and deploy to GitHub Pages
 on:
 push:
-branches: [ main ]
+branches: [ "main" ]
 workflow_dispatch:
 schedule:
-- cron: '0 */6 * * *' # every 6 hours; adjust as needed
+- cron: '0 */6 * * *'
 
 permissions:
 contents: read
@@ -13,7 +14,7 @@ pages: write
 id-token: write
 
 concurrency:
-group: 'pages'
+group: pages
 cancel-in-progress: true
 
 jobs:
@@ -21,29 +22,30 @@ build:
 runs-on: ubuntu-latest
 steps:
 - name: Checkout
-  uses: actions/checkout@b4ffde65f46336ab88eb53be808477a54309eb2b
-- name: Setup Node
-  uses: actions/setup-node@b4ffde65f46336ab88eb53be808477a54309eb2b
-  with:
-    node-version: 20
-- name: Fetch data from JSONBin
-  run: node scripts/fetch-jsonbin.js
-  env:
-    BIN_ID: ${{ secrets.JSONBIN_BIN_ID }}
-    JSONBIN_MASTER_KEY: ${{ secrets.JSONBIN_MASTER_KEY }}
-- name: Prepare Pages artifact
-  run: |
-    mkdir -p dist
-    cp -R ./*.html dist/
-    cp -R ./data dist/
-    # Copy any other static assets you reference:
-    # images, icons, CSS, JS, etc.
-    # Example:
-    [ -f ./favii.png ] && cp ./favii.png dist/ || true
-- name: Upload artifact
-  uses: actions/upload-pages-artifact@b4ffde65f46336ab88eb53be808477a54309eb2b
-  with:
-    path: dist
+uses: actions/checkout@v4
+
+  - name: Setup Node
+    uses: actions/setup-node@v4
+    with:
+      node-version: 20
+
+  - name: Fetch data from JSONBin
+    run: node scripts/fetch-jsonbin.js
+    env:
+      BIN_ID: ${{ secrets.JSONBIN_BIN_ID }}
+      JSONBIN_MASTER_KEY: ${{ secrets.JSONBIN_MASTER_KEY }}
+
+  - name: Prepare Pages artifact
+    run: |
+      mkdir -p dist
+      cp -R ./*.html dist/
+      cp -R ./data dist/
+      [ -f ./favii.png ] && cp ./favii.png dist/ || true
+
+  - name: Upload artifact
+    uses: actions/upload-pages-artifact@v3
+    with:
+      path: dist
 deploy:
 needs: build
 runs-on: ubuntu-latest
