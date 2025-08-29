@@ -482,6 +482,12 @@
 	#logout {
 		cursor: pointer;
 	}
+	#editmodal input[type=text],
+	#editmodal input[type=number],
+	#editmodal select,
+	#editmodal textarea {
+		width: 100%;
+	}
 	</style>
 </head>
 
@@ -526,9 +532,9 @@
 				<option value="">Összes típus</option>
 				<option>Családi ház</option>
 				<option>Lakás</option>
-				<option>Condo</option>
-				<option>TownCsaládi ház</option>
-				<option>Land</option>
+				<option>Nyaraló</option>
+				<option>Telek</option>
+				<option>Ipari ingatlan</option>
 			</select>
 			<select id="sortBy">
 				<option value="date_desc">Legújabb</option>
@@ -545,8 +551,7 @@
 		<div class="modal-card">
 			<div class="modal-left">
 				<div class="modal-head">
-					<h3 class="modal-title">Fotók</h3>
-					<button class="close" id="closeModalLeft">Bezárás</button>
+					<h3 class="modal-title">Fényképek</h3>
 				</div>
 				<div class="photoBar" id="mPhotoBar"></div>
 				<label class="addPhoto">Képek hozzáadása<input id="mAddPhotos" type="file" accept="image/*" multiple style="display:none"></label>
@@ -559,7 +564,7 @@
 				</div>
 				<div class="form-grid">
 					<div class="col-6">
-						<label for="mTitle">Cím</label>
+						<label for="mTitle">Főcím</label>
 						<input id="mTitle" type="text">
 					</div>
 					<div class="col-3">
@@ -575,12 +580,12 @@
 					<div class="col-3">
 						<label for="mType">Ingatlan típusa</label>
 						<select id="mType">
-							<option value="">Válasszon</option>
+							<option value="">Válasszon</option>	
 							<option>Családi ház</option>
 							<option>Lakás</option>
-							<option>Condo</option>
-							<option>TownCsaládi ház</option>
-							<option>Land</option>
+							<option>Nyaraló</option>
+							<option>Telek</option>
+							<option>Ipari ingatlan</option>
 						</select>
 					</div>
 					<div class="col-2">
@@ -1191,6 +1196,7 @@ setStatus('Publikálás indítása nem sikerült. Indítsa kézzel az Actions-be
 </body>
 
 </html>
+
 
 
 
