@@ -2,7 +2,7 @@ name: Build and deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
   schedule:
     - cron: '0 */6 * * *' # every 6 hours; adjust as needed
@@ -43,6 +43,13 @@ jobs:
           # images, icons, CSS, JS, etc.
           # Example:
           [ -f ./favii.png ] && cp ./favii.png dist/ || true
+
+      - name: Inject public config
+        env:
+          PUBLIC_API_BASE: ${{ vars.PUBLIC_API_BASE }}
+          PUBLIC_FEATURE_FLAG: ${{ vars.PUBLIC_FEATURE_FLAG }}
+        run: |
+          node -e "const fs=require('fs'); const cfg={ apiBase: process.env.PUBLIC_API_BASE || '', featureFlag: process.env.PUBLIC_FEATURE_FLAG || '' }; fs.writeFileSync('dist/config.js', 'window.PUBLIC_CONFIG = ' + JSON.stringify(cfg) + ';\n');"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
