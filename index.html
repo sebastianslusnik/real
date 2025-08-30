@@ -1686,6 +1686,7 @@ display: none;
                   <path d="M4 4h16v16H4z" fill="none" stroke="#fff" stroke-width="2" />
                   <path d="M22 6l-10 7L2 6" fill="none" stroke="#fff" stroke-width="2" />
                 </svg> E-mail küldése </a>
+              <a id="ctaOpenPage" class="secondary" target="_blank" rel="noopener">Megnyitás külön oldalon</a>
             </div>
           </div>
         </div>
@@ -1799,6 +1800,7 @@ setInterval(toggleAnimatingClass, 2500);
         lblMobile: document.getElementById('lblMobile'),
         lblEmail: document.getElementById('lblEmail'),
         contactAddress: document.getElementById('contactAddress'),
+        ctaOpenPage: document.getElementById('ctaOpenPage'),
         contactHours: document.getElementById('contactHours')
       }
       document.getElementById('year').innerHTML = new Date().getFullYear()
@@ -1814,6 +1816,7 @@ setInterval(toggleAnimatingClass, 2500);
           heroTypeAny: 'Bármilyen típus',
           heroBeds: 'Hálószobák',
           heroGo: 'Keresés',
+          openPage: 'Megnyitás külön oldalon',
           searchPlaceholder: 'Keresés a találatok között',
           allTypes: 'Összes típus',
           minBeds: 'Min. háló',
@@ -1868,6 +1871,7 @@ setInterval(toggleAnimatingClass, 2500);
           heroTypeAny: 'Akýkoľvek typ',
           heroBeds: 'Spálne',
           heroGo: 'Hľadať',
+          openPage: 'Otvoriť na samostatnej stránke',
           searchPlaceholder: 'Hľadať v ponukách',
           allTypes: 'Všetky typy',
           minBeds: 'Min. izby',
@@ -2197,6 +2201,10 @@ els.paginator.appendChild(btn('›', Math.min(totalPages, p + 1), p === totalPag
 }
 
       function openModal(item) {
+        const basePath = window.location.origin + (window.location.pathname.endsWith('/') ? window.location.pathname.slice(0, -1) : window.location.pathname)
+        const detailUrl = basePath + '/' + item.id
+        els.ctaOpenPage.href = detailUrl
+        els.ctaOpenPage.innerHTML = t('openPage')
         state.modal.id = item.id
         state.modal.idx = 0
         els.modalType.innerHTML = item.propertyType || '—'
@@ -2468,6 +2476,7 @@ els.paginator.appendChild(btn('›', Math.min(totalPages, p + 1), p === totalPag
         els.minBaths.options[0].text = t('minBaths')
         els.minPrice.placeholder = t('minPrice')
         els.maxPrice.placeholder = t('maxPrice')
+        els.ctaOpenPage.innerHTML = t('openPage')
         const opts = els.sortBy.options
         for (let i = 0; i < opts.length; i++) {
           if (opts[i].value === 'date_desc') opts[i].text = t('sortNewest')
@@ -2589,6 +2598,7 @@ els.paginator.appendChild(btn('›', Math.min(totalPages, p + 1), p === totalPag
   </body>
 
 </html>
+
 
 
 
