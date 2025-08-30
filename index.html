@@ -2156,6 +2156,9 @@ s3.innerHTML = (item.areaM2 || 0) + ' ' + t('m2');
 specs.appendChild(s1);
 specs.appendChild(s2);
 specs.appendChild(s3);
+const s4 = document.createElement('span');
+s4.innerHTML = 'ID: ' + item.id;
+specs.appendChild(s4);
 body.appendChild(title);
 body.appendChild(addr);
 body.appendChild(specs);
@@ -2218,6 +2221,9 @@ els.paginator.appendChild(btn('›', Math.min(totalPages, p + 1), p === totalPag
           s.innerHTML = tx;
           els.modalChips.appendChild(s)
         })
+        const idChip = document.createElement('span');
+        idChip.innerHTML = 'ID: ' + item.id;
+        els.modalChips.appendChild(idChip);
         els.modalDesc.innerHTML = item.description || ''
         renderModalImage(item)
         els.modal.classList.add('open')
@@ -2599,6 +2605,7 @@ els.paginator.appendChild(btn('›', Math.min(totalPages, p + 1), p === totalPag
   </body>
 
 </html>
+
 
 
 
