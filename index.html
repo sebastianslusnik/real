@@ -702,7 +702,9 @@
 
       #map {
         height: 420px;
-        width: 100%
+        width: 100%;
+        z-index: 1;
+        position: relative;
       }
 
       .contactCard {
@@ -1415,6 +1417,16 @@ cursor: default;
 display: none;
 }
       .specs > span:last-child {
+          align-items: flex-end;
+          margin-left: auto;
+          background: transparent;
+          border: none;
+          color: #333;
+          font-weight: 500;
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+          float: right;
+      }
+      .modal-chips > span:last-child {
           align-items: flex-end;
           margin-left: auto;
           background: transparent;
@@ -2615,6 +2627,7 @@ els.paginator.appendChild(btn('›', Math.min(totalPages, p + 1), p === totalPag
   </body>
 
 </html>
+
 
 
 
