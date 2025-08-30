@@ -470,6 +470,11 @@
 		font-size: 12px;
 		color: #64748b
 	}
+	.smaller {
+		font-size: 12px;
+		color: #64748b;
+		align-self: flex-end;
+	}
 	.mainstatus {
 		margin-left: 100px;
     	position: relative;
@@ -990,7 +995,7 @@ setStatus('Publikálás indítása nem sikerült. Indítsa kézzel az Actions-be
 			body.appendChild(addr);
 			body.appendChild(specs);
 			const idLine = document.createElement('div');
-			idLine.className = 'small';
+			idLine.className = 'smaller';
 			idLine.textContent = 'ID: ' + (item.id || '');
 			body.appendChild(idLine);
 			card.appendChild(media);
@@ -1212,6 +1217,7 @@ setStatus('Publikálás indítása nem sikerült. Indítsa kézzel az Actions-be
 </body>
 
 </html>
+
 
 
 
