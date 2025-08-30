@@ -1,0 +1,800 @@
+<!doctype html>
+<html lang="hu">
+
+<head>
+	<meta charset="utf-8">
+	<title>KomplexIngatlan • Ingatlan részletei</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" type="image/png" href="favii.png">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+	<style>
+	:root {
+		--bg: #fdfaf6;
+		--card: #ffffff;
+		--muted: #667085;
+		--text: #0b1320;
+		--primary: #fa943f;
+		--primary-600: #ea580c;
+		--border: #efe7dc;
+		--chip: #fff7ed;
+		--ok: #16a34a;
+		--err: #dc2626;
+		--shadow: 0 12px 28px rgba(16, 24, 40, .08)
+	}
+
+	* {
+		box-sizing: border-box;
+		font-family: 'Inter' !important
+	}
+
+	html,
+	body {
+		height: 100%
+	}
+
+	body {
+		margin: 0;
+		background: var(--bg);
+		color: var(--text)
+	}
+
+	a {
+		text-decoration: none;
+		color: inherit
+	}
+
+	.container {
+		max-width: 1300px;
+		margin: 0 auto;
+		padding: 0 20px
+	}
+
+	.header {
+		position: fixed;
+		top: 30px;
+		left: 50%;
+		transform: translate(-50%, 0px);
+		z-index: 40;
+		background: rgba(255, 255, 255, .75);
+		backdrop-filter: saturate(180%) blur(10px);
+		border-bottom: 1px solid var(--border);
+		width: 90vw;
+		max-width: 1300px;
+		border-radius: 10px
+	}
+
+	@media(max-width:1300px) {
+		.header {
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			transform: translate(0, 0);
+			z-index: 40;
+			background: rgba(255, 255, 255, .75);
+			backdrop-filter: saturate(180%) blur(10px);
+			border-bottom: 1px solid var(--border);
+			width: 100%;
+			max-width: 100%;
+			border-radius: 0
+		}
+	}
+
+	.header-inner {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+		height: 64px
+	}
+
+	.brand {
+		display: flex;
+		align-items: center;
+		gap: 12px
+	}
+
+	.logo {
+		width: 48px;
+		height: 48px;
+		border-radius: 50%;
+		background-image: url(favii.png);
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: contain
+	}
+
+	.brand h1 {
+		font-size: 18px;
+		margin: 0;
+		font-weight: 800;
+		letter-spacing: .2px
+	}
+
+	.nav {
+		display: flex;
+		gap: 10px;
+		align-items: center
+	}
+
+	.nav a {
+		padding: 12px 20px;
+		border-radius: 10px;
+		color: #1f2937
+	}
+
+	.nav .cta {
+		background: var(--primary);
+		color: #fff;
+		font-weight: 700
+	}
+
+	.switchers {
+		display: flex;
+		gap: 8px;
+		align-items: center;
+		background: #fff;
+		border: 1px solid var(--border);
+		border-radius: 12px;
+		padding: 4px
+	}
+
+	.dd {
+		position: relative
+	}
+
+	.dd-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		background: #fff;
+		border: 1px solid var(--border);
+		border-radius: 10px;
+		padding: 8px 10px;
+		cursor: pointer;
+		height: 38px
+	}
+
+	.dd-btn .flag {
+		font-size: 16px
+	}
+
+	.dd-menu {
+		position: absolute;
+		right: 0;
+		top: 44px;
+		background: #fff;
+		border: 1px solid var(--border);
+		border-radius: 12px;
+		box-shadow: var(--shadow);
+		min-width: 160px;
+		display: none;
+		overflow: hidden
+	}
+
+	.dd.open .dd-menu {
+		display: block
+	}
+
+	.dd-item {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 10px 12px;
+		cursor: pointer
+	}
+
+	.dd-item:hover {
+		background: #fff7ed
+	}
+
+	.section {
+		padding: 100px 0 36px
+	}
+
+	.detailGrid {
+		display: grid;
+		grid-template-columns: 1.2fr .8fr;
+		gap: 16px
+	}
+
+	@media(max-width:1000px) {
+		.detailGrid {
+			grid-template-columns: 1fr
+		}
+	}
+
+	.card {
+		background: var(--card);
+		border: 1px solid var(--border);
+		border-radius: 16px;
+		overflow: hidden;
+		box-shadow: var(--shadow)
+	}
+
+	.carousel {
+		position: relative;
+		height: 520px;
+		background: #fff3e5
+	}
+
+	.carousel img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block
+	}
+
+	.carousel .nav {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 0 8px
+	}
+
+	.carousel button {
+		background: rgba(255, 255, 255, .95);
+		border: 1px solid var(--border);
+		width: 40px;
+		height: 40px;
+		border-radius: 999px;
+		display: grid;
+		place-items: center;
+		cursor: pointer
+	}
+
+	.badge {
+		position: absolute;
+		left: 10px;
+		top: 10px;
+		background: #7c2d12;
+		color: #fff;
+		border-radius: 999px;
+		padding: 6px 10px;
+		font-size: 12px
+	}
+
+	.price {
+		position: absolute;
+		right: 10px;
+		top: 10px;
+		background: linear-gradient(135deg, #fb923c, #f59e0b);
+		color: #0b1320;
+		border-radius: 999px;
+		padding: 6px 10px;
+		font-weight: 800
+	}
+
+	.detailBody {
+		padding: 24px
+	}
+
+	.title {
+		font-weight: 800;
+		font-size: 24px;
+		margin: 0 0 6px
+	}
+
+	.addr {
+		color: #64748b;
+		font-size: 14px;
+		margin: 0 0 12px
+	}
+
+	.modal-chips,
+	.chips {
+		display: flex;
+		gap: 8px;
+		flex-wrap: wrap;
+		margin: 12px 0 18px
+	}
+
+	.chips span {
+		background: #fff7ed;
+		border: 1px solid var(--border);
+		border-radius: 999px;
+		padding: 6px 10px;
+		font-size: 12px
+	}
+
+	.desc {
+		color: #334155;
+		line-height: 1.6;
+		white-space: pre-wrap
+	}
+
+	.actions {
+		display: flex;
+		gap: 8px;
+		margin-top: 18px;
+		flex-wrap: wrap
+	}
+
+	.actions a {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		background: var(--primary);
+		color: #fff;
+		border-radius: 10px;
+		padding: 10px 12px;
+		font-weight: 700
+	}
+
+	.actions a.secondary {
+		background: #292524;
+		color: #fff
+	}
+
+	.section-title {
+		font-size: 20px;
+		font-weight: 800;
+		margin: 0 0 12px
+	}
+
+	.map-wrap {
+		border: 1px solid var(--border);
+		border-radius: 16px;
+		overflow: hidden;
+		box-shadow: var(--shadow)
+	}
+
+	#map {
+		height: 420px;
+		width: 100%
+	}
+
+	footer {
+		margin-top: 36px;
+		background: #fff;
+		border-top: 1px solid var(--border)
+	}
+
+	.footer-inner {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 18px 0;
+		gap: 12px
+	}
+
+	.footer-inner .small {
+		color: #64748b;
+		font-size: 14px
+	}
+
+	.pill {
+		display: inline-flex;
+		gap: 6px;
+		align-items: center;
+		background: #fff7ed;
+		border: 1px solid #fed7aa;
+		color: #7c2d12;
+		border-radius: 999px;
+		padding: 6px 10px;
+		font-size: 12px
+	}
+
+	.hidden {
+		display: none
+	}
+	</style>
+</head>
+
+<body>
+	<header class="header">
+		<div class="container header-inner">
+			<div class="brand">
+				<div class="logo"></div>
+				<h1>Komplex<span style="font-weight:300">Ingatlan</span>.com</h1>
+			</div>
+			<nav class="nav">
+				<div class="switchers">
+					<div class="dd" id="ddLang">
+						<div class="dd-btn" id="langBtn"><span class="flag" id="langFlag">🇭🇺</span><span id="langLabel">Magyar</span></div>
+						<div class="dd-menu">
+							<div class="dd-item" data-lang="hu"><span class="flag">🇭🇺</span><span>Magyar</span></div>
+							<div class="dd-item" data-lang="sk"><span class="flag">🇸🇰</span><span>Slovenčina</span></div>
+						</div>
+					</div>
+					<div class="dd" id="ddCur">
+						<div class="dd-btn" id="curBtn"><span class="flag" id="curFlag">Ft</span><span id="curLabel">HUF</span></div>
+						<div class="dd-menu">
+							<div class="dd-item" data-cur="HUF"><span class="flag">Ft</span><span>HUF</span></div>
+							<div class="dd-item" data-cur="EUR"><span class="flag">€</span><span>EUR</span></div>
+						</div>
+					</div>
+				</div> <a class="cta" href="./">Vissza a találatokhoz</a>
+			</nav>
+		</div>
+	</header>
+	<section class="section">
+		<div class="container">
+			<div class="detailGrid">
+				<div class="card">
+					<div class="carousel" id="gal">
+						<div class="badge" id="badge"></div>
+						<div class="price" id="price"></div>
+						<div class="nav"> <button id="prev" aria-label="Előző"> <svg width="18" height="18" viewBox="0 0 24 24">
+									<path d="M15 18l-6-6 6-6" stroke="#111" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" /> </svg> </button> <button id="next" aria-label="Következő"> <svg width="18" height="18" viewBox="0 0 24 24">
+									<path d="M9 6l6 6-6 6" stroke="#111" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" /> </svg> </button> </div>
+					</div>
+				</div>
+				<div class="card">
+					<div class="detailBody">
+						<h1 class="title" id="title"></h1>
+						<div class="addr" id="addr"></div>
+						<div class="chips" id="chips"></div>
+						<div class="desc" id="desc"></div>
+						<div class="actions"> <a id="callBtn" href="#"><span>📞</span><span id="callLbl">Hívjon most</span></a> <a id="emailBtn" class="secondary" href="#"><span>✉️</span><span id="emailLbl">E-mail küldése</span></a> <a id="backBtn" class="secondary" href="./"><span>←</span><span id="backLbl">Vissza a találatokhoz</span></a> </div>
+					</div>
+				</div>
+			</div>
+			<h3 class="section-title" style="margin-top:24px" id="mapTitle">Ingatlan helye</h3>
+			<div class="map-wrap">
+				<div id="map"></div>
+			</div>
+		</div>
+	</section>
+	<footer>
+		<div class="container footer-inner">
+			<div class="brand" style="gap:8px">
+				<div class="logo" style="width:48px;height:48px"></div><strong>Komplex<span style="font-weight:300">Ingatlan</span>.com</strong>
+			</div>
+			<div class="small" id="rights"></div>
+			<div class="pill" id="footerMail">hello@komplexingatlan.com</div>
+		</div>
+	</footer>
+	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+	<script>
+	const EUR_TO_HUF = 390
+	const FALLBACK_LAT = 47.8712
+	const FALLBACK_LNG = 17.2719
+	const state = {
+		lang: localStorage.getItem('lang') || 'hu',
+		currency: localStorage.getItem('currency') || 'HUF',
+		listing: null,
+		photos: [],
+		idx: 0,
+		map: null,
+		geoCache: new Map()
+	}
+	const els = {
+		badge: document.getElementById('badge'),
+		price: document.getElementById('price'),
+		gal: document.getElementById('gal'),
+		prev: document.getElementById('prev'),
+		next: document.getElementById('next'),
+		title: document.getElementById('title'),
+		addr: document.getElementById('addr'),
+		chips: document.getElementById('chips'),
+		desc: document.getElementById('desc'),
+		callBtn: document.getElementById('callBtn'),
+		emailBtn: document.getElementById('emailBtn'),
+		backBtn: document.getElementById('backBtn'),
+		callLbl: document.getElementById('callLbl'),
+		emailLbl: document.getElementById('emailLbl'),
+		backLbl: document.getElementById('backLbl'),
+		mapTitle: document.getElementById('mapTitle'),
+		rights: document.getElementById('rights'),
+		ddLang: document.getElementById('ddLang'),
+		ddCur: document.getElementById('ddCur'),
+		langBtn: document.getElementById('langBtn'),
+		curBtn: document.getElementById('curBtn'),
+		langFlag: document.getElementById('langFlag'),
+		langLabel: document.getElementById('langLabel'),
+		curFlag: document.getElementById('curFlag'),
+		curLabel: document.getElementById('curLabel')
+	}
+	const i18n = {
+		hu: {
+			openMap: 'Ingatlan helye',
+			callNow: 'Hívjon most',
+			emailAgent: 'E-mail küldése',
+			backToResults: 'Vissza a találatokhoz',
+			bdLabelShort: 'háló',
+			baLabelShort: 'fürdő',
+			m2: 'm²',
+			footerRights: n => '© ' + n + ' KomplexIngatlan. Minden jog fenntartva.',
+			langLabel: 'Magyar',
+			langFlag: '🇭🇺',
+			curLabelHUF: 'HUF',
+			curLabelEUR: 'EUR',
+			curFlagHUF: 'Ft',
+			curFlagEUR: '€'
+		},
+		sk: {
+			openMap: 'Poloha nehnuteľnosti',
+			callNow: 'Zavolať teraz',
+			emailAgent: 'Napísať e‑mail',
+			backToResults: 'Späť na ponuky',
+			bdLabelShort: 'izba',
+			baLabelShort: 'kúpeľňa',
+			m2: 'm²',
+			footerRights: n => '© ' + n + ' KomplexIngatlan. Všetky práva vyhradené.',
+			langLabel: 'Slovenčina',
+			langFlag: '🇸🇰',
+			curLabelHUF: 'HUF',
+			curLabelEUR: 'EUR',
+			curFlagHUF: 'Ft',
+			curFlagEUR: '€'
+		}
+	}
+
+	function t(key, ...args) {
+		const d = i18n[state.lang];
+		const v = d[key];
+		return typeof v === 'function' ? v(...args) : v
+	}
+
+	function updateSwitchUI() {
+		if(state.lang === 'hu') {
+			els.langFlag.innerHTML = i18n.hu.langFlag;
+			els.langLabel.innerHTML = i18n.hu.langLabel
+		} else {
+			els.langFlag.innerHTML = i18n.sk.langFlag;
+			els.langLabel.innerHTML = i18n.sk.langLabel
+		}
+		if(state.currency === 'HUF') {
+			els.curFlag.innerHTML = i18n[state.lang].curFlagHUF;
+			els.curLabel.innerHTML = i18n[state.lang].curLabelHUF
+		} else {
+			els.curFlag.innerHTML = i18n[state.lang].curFlagEUR;
+			els.curLabel.innerHTML = i18n[state.lang].curLabelEUR
+		}
+	}
+
+	function applyLanguage() {
+		els.mapTitle.innerHTML = t('openMap') els.callLbl.innerHTML = t('callNow') els.emailLbl.innerHTML = t('emailAgent') els.backLbl.innerHTML = t('backToResults') els.rights.innerHTML = t('footerRights', new Date().getFullYear()) updateSwitchUI()
+	}
+
+	function fmtMoneyEUR(e) {
+		return new Intl.NumberFormat(state.lang === 'hu' ? 'hu-HU' : 'sk-SK', {
+			style: 'currency',
+			currency: 'EUR',
+			maximumFractionDigits: 0
+		}).format(e)
+	}
+
+	function fmtMoneyHUF(h) {
+		return new Intl.NumberFormat('hu-HU', {
+			style: 'currency',
+			currency: 'HUF',
+			maximumFractionDigits: 0
+		}).format(h)
+	}
+
+	function fmtPriceFromEUR(eur) {
+		if(state.currency === 'EUR') return fmtMoneyEUR(eur || 0);
+		return fmtMoneyHUF(Math.round((eur || 0) * EUR_TO_HUF))
+	}
+
+	function placeholder() {
+		const svg = encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fff3e5"/><stop offset="100%" stop-color="#ffe8cc"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g)"/></svg>');
+		return 'data:image/svg+xml;charset=utf-8,' + svg
+	}
+
+	function sqftToM2(sq) {
+		const m2 = (Number(sq || 0) * 0.092903);
+		return Math.round(m2)
+	}
+
+	function normalize(x) {
+		const y = {
+			...x
+		};
+		const title = y.title || y.heading || '';
+		const description = y.description || y.additionalDetails || '';
+		let price = y.price;
+		if(price == null && y.data) {
+			const m = String(y.data).match(/[\d,]+/);
+			if(m) price = Number(m[0].replace(/,/g, ''))
+		}
+		const id = y.id || Math.random().toString(36).slice(2);
+		const propertyType = y.propertyType || y.type || '';
+		const photos = Array.isArray(y.photos) && y.photos.length ? y.photos : [placeholder()];
+		const m2 = sqftToM2(y.area || 0);
+		return {
+			id,
+			title,
+			description,
+			priceEUR: Number(price || 0),
+			propertyType,
+			bedrooms: Number(y.bedrooms || 0),
+			bathrooms: Number(y.bathrooms || 0),
+			areaM2: m2,
+			address: y.address || '',
+			city: y.city || '',
+			state: y.state || '',
+			photos,
+			createdAt: y.createdAt || new Date().toISOString()
+		}
+	}
+	async function fetchListings() {
+		const r = await fetch('./data/listings.json', {
+			headers: {
+				'Accept': 'application/json'
+			},
+			cache: 'no-store'
+		});
+		if(!r.ok) return [];
+		const arr = await r.json();
+		return Array.isArray(arr) ? arr : []
+	}
+
+	function getIdFromUrl() {
+		const q = new URLSearchParams(location.search);
+		const qid = q.get('id');
+		if(qid) return qid;
+		const parts = location.pathname.split('/').filter(Boolean);
+		const last = parts.pop();
+		if(last && last !== 'listing.html' && last !== 'index.html') return last;
+		return null
+	}
+
+	function attachGallery(photos) {
+		state.photos = photos && photos.length ? photos : [placeholder()];
+		state.idx = 0;
+		renderSlide();
+		els.prev.onclick = (e) => {
+			e.stopPropagation();
+			state.idx = (state.idx - 1 + state.photos.length) % state.photos.length;
+			renderSlide()
+		};
+		els.next.onclick = (e) => {
+			e.stopPropagation();
+			state.idx = (state.idx + 1) % state.photos.length;
+			renderSlide()
+		}
+	}
+
+	function renderSlide() {
+		els.gal.querySelectorAll('img').forEach(n => n.remove());
+		const img = document.createElement('img');
+		img.src = state.photos[state.idx] || placeholder();
+		els.gal.insertBefore(img, els.gal.querySelector('.nav'))
+	}
+
+	function chipsFor(item) {
+		els.chips.innerHTML = '';
+		[(item.bedrooms || 0) + ' ' + t('bdLabelShort'), (item.bathrooms || 0) + ' ' + t('baLabelShort'), (item.areaM2 || 0) + ' ' + t('m2')].forEach(tx => {
+			const s = document.createElement('span');
+			s.innerHTML = tx;
+			els.chips.appendChild(s)
+		})
+	}
+
+	function repoBase() {
+		const parts = location.pathname.split('/').filter(Boolean);
+		if(parts.length === 0) return '/';
+		return '/' + parts[0] + '/'
+	}
+
+	function setHeaderBackLink() {
+		els.backBtn.href = repoBase()
+	}
+	async function geocode(addr) {
+		const key = addr.trim().toLowerCase();
+		if(state.geoCache.has(key)) return state.geoCache.get(key);
+		const url = 'https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(addr);
+		const r = await fetch(url, {
+			headers: {
+				'Accept': 'application/json'
+			}
+		});
+		if(!r.ok) {
+			state.geoCache.set(key, null);
+			return null
+		}
+		const j = await r.json();
+		const loc = j && j[0] ? {
+			lat: parseFloat(j[0].lat),
+			lng: parseFloat(j[0].lon)
+		} : null;
+		state.geoCache.set(key, loc);
+		return loc
+	}
+
+	function setupPicker() {
+		document.addEventListener('click', e => {
+			if(!els.ddLang.contains(e.target)) els.ddLang.classList.remove('open');
+			if(!els.ddCur.contains(e.target)) els.ddCur.classList.remove('open')
+		});
+		els.langBtn.addEventListener('click', () => {
+			els.ddLang.classList.toggle('open')
+		});
+		els.curBtn.addEventListener('click', () => {
+			els.ddCur.classList.toggle('open')
+		});
+		els.ddLang.querySelectorAll('.dd-item').forEach(it => it.addEventListener('click', () => {
+			state.lang = it.getAttribute('data-lang');
+			localStorage.setItem('lang', state.lang);
+			applyLanguage();
+			renderListing()
+		}));
+		els.ddCur.querySelectorAll('.dd-item').forEach(it => it.addEventListener('click', () => {
+			state.currency = it.getAttribute('data-cur');
+			localStorage.setItem('currency', state.currency);
+			applyLanguage();
+			renderListing()
+		}))
+	}
+
+	function addrOf(item) {
+		return [item.address, item.city, item.state].filter(Boolean).join(', ')
+	}
+
+	function setDocTitle(item) {
+		document.title = 'KomplexIngatlan • ' + (item.title || 'Ingatlan')
+	}
+	async function renderListing() {
+		const it = state.listing;
+		if(!it) return;
+		els.badge.innerHTML = it.propertyType || '—';
+		els.price.innerHTML = fmtPriceFromEUR(it.priceEUR || 0);
+		els.title.innerHTML = it.title || '';
+		els.addr.innerHTML = addrOf(it);
+		chipsFor(it);
+		els.desc.innerHTML = it.description || '';
+		attachGallery(it.photos || []);
+		setDocTitle(it);
+		els.callBtn.href = 'tel:+36301234567';
+		els.emailBtn.href = 'mailto:hello@komplexingatlan.com?subject=' + encodeURIComponent(it.title || 'Ingatlan érdeklődés');
+		const address = addrOf(it);
+		try {
+			const loc = await geocode(address);
+			setupMap(loc)
+		} catch (e) {
+			setupMap(null)
+		}
+	}
+
+	function setupMap(loc) {
+		if(state.map) {
+			state.map.remove()
+		}
+		state.map = L.map('map', {
+			scrollWheelZoom: false
+		}).setView([FALLBACK_LAT, FALLBACK_LNG], 15);
+		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			attribution: '© OpenStreetMap'
+		}).addTo(state.map);
+		const point = loc || {
+			lat: FALLBACK_LAT,
+			lng: FALLBACK_LNG
+		};
+		const m = L.marker([point.lat, point.lng]).addTo(state.map);
+		m.bindPopup(els.title.textContent || '');
+		if(loc) {
+			state.map.setView([loc.lat, loc.lng], 16)
+		}
+	}
+	async function init() {
+		applyLanguage();
+		setupPicker();
+		setHeaderBackLink();
+		const id = getIdFromUrl();
+		if(!id) {
+			els.title.innerHTML = 'Nincs ilyen azonosító';
+			return
+		}
+		const raw = await fetchListings();
+		const list = raw.map(normalize);
+		const found = list.find(x => String(x.id) === String(id));
+		if(!found) {
+			els.title.innerHTML = 'Ingatlan nem található';
+			return
+		}
+		state.listing = found;
+		renderListing()
+	}
+	init()
+	</script>
+</body>
+
+</html>
