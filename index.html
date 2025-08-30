@@ -1415,12 +1415,15 @@ cursor: default;
 display: none;
 }
       .specs > span:last-child {
-background: #fff7ed;
-border-color: #fa943f;
-color: #7c2d12;
-font-weight: 700;
-font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-}
+          align-items: flex-end;
+          margin-left: auto;
+          background: transparent;
+          border: none;
+          color: #333;
+          font-weight: 500;
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+          float: right;
+      }
 
     </style>
   </head>
@@ -2612,6 +2615,7 @@ els.paginator.appendChild(btn('›', Math.min(totalPages, p + 1), p === totalPag
   </body>
 
 </html>
+
 
 
 
