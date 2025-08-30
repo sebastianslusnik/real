@@ -11,7 +11,8 @@
 <body>
 	<script>
 	(function() {
-		var parts = location.pathname.split('/').filter(Boolean) if(parts.length >= 2) {
+		var parts = location.pathname.split('/').filter(Boolean);
+		if(parts.length >= 2) {
 			var repo = parts[0]
 			var id = parts.slice(1).join('/') var target = '/' + repo + '/listing.html?id=' + encodeURIComponent(id) location.replace(target)
 		} else {
