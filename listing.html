@@ -673,14 +673,19 @@
 		els.gal.insertBefore(img, els.gal.querySelector('.nav'))
 	}
 
-	function chipsFor(item) {
-		els.chips.innerHTML = '';
-		[(item.bedrooms || 0) + ' ' + t('bdLabelShort'), (item.bathrooms || 0) + ' ' + t('baLabelShort'), (item.areaM2 || 0) + ' ' + t('m2')].forEach(tx => {
-			const s = document.createElement('span');
-			s.innerHTML = tx;
-			els.chips.appendChild(s)
-		})
-	}
+function chipsFor(item){
+	els.chips.innerHTML='';
+	[
+	(item.bedrooms||0)+' '+t('bdLabelShort'),
+	(item.bathrooms||0)+' '+t('baLabelShort'),
+	(item.areaM2||0)+' '+t('m2'),
+	'ID: '+item.id
+	].forEach(tx=>{
+	const s=document.createElement('span');
+	s.innerHTML=tx;
+	els.chips.appendChild(s);
+	});
+}
 
 	function repoBase() {
 		const parts = location.pathname.split('/').filter(Boolean);
