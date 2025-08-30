@@ -2003,7 +2003,7 @@ return Array.isArray(arr) ? arr : [];
         const sort = els.sortBy.value
         let arr = [...state.listings]
         if (term) {
-          arr = arr.filter(it => (it.title + ' ' + it.description + ' ' + it.address + ' ' + it.city + ' ' + it.state).toLowerCase().includes(term))
+          arr = arr.filter(it => (it.title + ' ' + it.description + ' ' + it.address + ' ' + it.city + ' ' + it.state + ' ' + (it.id || '')).toLowerCase().includes(term))
         }
         if (type) {
           arr = arr.filter(it => it.propertyType === type)
@@ -2589,6 +2589,7 @@ els.paginator.appendChild(btn('›', Math.min(totalPages, p + 1), p === totalPag
   </body>
 
 </html>
+
 
 
 
