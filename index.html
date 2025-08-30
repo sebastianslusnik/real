@@ -1384,6 +1384,36 @@ mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'
     z-index: 9999;
   border-radius:6px;
 }
+      .pagination {
+display: flex;
+gap: 8px;
+align-items: center;
+justify-content: center;
+margin-top: 18px;
+flex-wrap: wrap;
+}
+.pagination .page-btn {
+background: #fff;
+border: 1px solid var(--border);
+color: #1f2937;
+border-radius: 10px;
+padding: 8px 12px;
+font-size: 13px;
+font-weight: 700;
+cursor: pointer;
+}
+.pagination .page-btn.active {
+background: var(--primary);
+color: #fff;
+border-color: var(--primary);
+}
+.pagination .page-btn[disabled] {
+opacity: .5;
+cursor: default;
+}
+.pagination.hidden {
+display: none;
+}
 
     </style>
   </head>
@@ -1540,6 +1570,7 @@ mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'
           <div id="activeFilters" class="pill hidden"></div>
         </div>
         <div id="grid" class="grid"></div>
+        <div id="paginator" class="pagination hidden"></div>
       </div>
     </section>
     <section id="mapSection" class="section">
@@ -1700,7 +1731,9 @@ setInterval(toggleAnimatingClass, 2500);
           idx: 0
         },
         lang: 'hu',
-        currency: 'HUF'
+        currency: 'HUF',
+        page: 1,
+        perPage: 15
       }
       const els = {
         navBrowse: document.getElementById('navBrowse'),
@@ -1727,6 +1760,7 @@ setInterval(toggleAnimatingClass, 2500);
         sortBy: document.getElementById('sortBy'),
         clear: document.getElementById('clearFilters'),
         grid: document.getElementById('grid'),
+        paginator: document.getElementById('paginator'),
         resultCount: document.getElementById('resultCount'),
         activeFilters: document.getElementById('activeFilters'),
         mapTitle: document.getElementById('mapTitle'),
@@ -2008,6 +2042,7 @@ return Array.isArray(arr) ? arr : [];
         } else {
           els.activeFilters.classList.add('hidden')
         }
+        state.page = 1
         renderGrid()
         updateMapMarkers()
       }
@@ -2075,54 +2110,91 @@ return Array.isArray(arr) ? arr : [];
       }
 
       function renderGrid() {
-        els.grid.innerHTML = ''
-        setResultCount()
-        state.filtered.forEach(item => {
-          const card = document.createElement('div');
-          card.className = 'card';
-          card.tabIndex = 0
-          const carousel = document.createElement('div');
-          carousel.className = 'carousel'
-          const badge = document.createElement('div');
-          badge.className = 'badge';
-          badge.innerHTML = item.propertyType || '—'
-          const price = document.createElement('div');
-          price.className = 'price';
-          price.innerHTML = fmtPriceFromEUR(item.priceEUR || 0)
-          carousel.appendChild(badge);
-          carousel.appendChild(price)
-          attachCarousel(carousel, item.photos, item.id)
-          const body = document.createElement('div');
-          body.className = 'body'
-          const title = document.createElement('h4');
-          title.className = 'title';
-          title.innerHTML = item.title || ''
-          const addr = document.createElement('div');
-          addr.className = 'addr';
-          addr.innerHTML = [item.address, item.city, item.state].filter(Boolean).join(', ')
-          const specs = document.createElement('div');
-          specs.className = 'specs'
-          const s1 = document.createElement('span');
-          s1.innerHTML = (item.bedrooms || 0) + ' ' + t('bdLabelShort')
-          const s2 = document.createElement('span');
-          s2.innerHTML = (item.bathrooms || 0) + ' ' + t('baLabelShort')
-          const s3 = document.createElement('span');
-          s3.innerHTML = (item.areaM2 || 0) + ' ' + t('m2')
-          specs.appendChild(s1);
-          specs.appendChild(s2);
-          specs.appendChild(s3)
-          body.appendChild(title);
-          body.appendChild(addr);
-          body.appendChild(specs)
-          card.appendChild(carousel);
-          card.appendChild(body)
-          card.addEventListener('click', () => openModal(item))
-          card.addEventListener('keydown', e => {
-            if (e.key === 'Enter') openModal(item)
-          })
-          els.grid.appendChild(card)
-        })
-      }
+els.grid.innerHTML = '';
+setResultCount();
+const start = (state.page - 1) * state.perPage;
+const items = state.filtered.slice(start, start + state.perPage);
+items.forEach(item => {
+const card = document.createElement('div');
+card.className = 'card';
+card.tabIndex = 0;
+const carousel = document.createElement('div');
+carousel.className = 'carousel';
+const badge = document.createElement('div');
+badge.className = 'badge';
+badge.innerHTML = item.propertyType || '—';
+const price = document.createElement('div');
+price.className = 'price';
+price.innerHTML = fmtPriceFromEUR(item.priceEUR || 0);
+carousel.appendChild(badge);
+carousel.appendChild(price);
+attachCarousel(carousel, item.photos, item.id);
+const body = document.createElement('div');
+body.className = 'body';
+const title = document.createElement('h4');
+title.className = 'title';
+title.innerHTML = item.title || '';
+const addr = document.createElement('div');
+addr.className = 'addr';
+addr.innerHTML = [item.address, item.city, item.state].filter(Boolean).join(', ');
+const specs = document.createElement('div');
+specs.className = 'specs';
+const s1 = document.createElement('span');
+s1.innerHTML = (item.bedrooms || 0) + ' ' + t('bdLabelShort');
+const s2 = document.createElement('span');
+s2.innerHTML = (item.bathrooms || 0) + ' ' + t('baLabelShort');
+const s3 = document.createElement('span');
+s3.innerHTML = (item.areaM2 || 0) + ' ' + t('m2');
+specs.appendChild(s1);
+specs.appendChild(s2);
+specs.appendChild(s3);
+body.appendChild(title);
+body.appendChild(addr);
+body.appendChild(specs);
+card.appendChild(carousel);
+card.appendChild(body);
+card.addEventListener('click', () => openModal(item));
+card.addEventListener('keydown', e => {
+if (e.key === 'Enter') openModal(item);
+});
+els.grid.appendChild(card);
+});
+renderPaginator();
+}
+      function renderPaginator() {
+const total = state.filtered.length;
+const per = state.perPage;
+const totalPages = Math.max(1, Math.ceil(total / per));
+if (total <= per) {
+els.paginator.classList.add('hidden');
+els.paginator.innerHTML = '';
+return;
+}
+els.paginator.classList.remove('hidden');
+els.paginator.innerHTML = '';
+const p = state.page;
+function btn(label, targetPage, disabled, active) {
+const b = document.createElement('button');
+b.className = 'page-btn' + (active ? ' active' : '');
+b.textContent = label;
+if (disabled) b.disabled = true;
+b.addEventListener('click', () => {
+if (disabled || targetPage === p) return;
+state.page = targetPage;
+renderGrid();
+document.getElementById('listings').scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+return b;
+}
+els.paginator.appendChild(btn('‹', Math.max(1, p - 1), p === 1, false));
+let start = Math.max(1, p - 2);
+let end = Math.min(totalPages, start + 4);
+if (end - start < 4) start = Math.max(1, end - 4);
+for (let i = start; i <= end; i++) {
+els.paginator.appendChild(btn(String(i), i, false, i === p));
+}
+els.paginator.appendChild(btn('›', Math.min(totalPages, p + 1), p === totalPages, false));
+}
 
       function openModal(item) {
         state.modal.id = item.id
@@ -2517,6 +2589,7 @@ return Array.isArray(arr) ? arr : [];
   </body>
 
 </html>
+
 
 
 
