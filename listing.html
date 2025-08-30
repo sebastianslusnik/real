@@ -452,6 +452,14 @@
 	</footer>
 	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 	<script>
+	function ensurePrettyUrl(id){
+		var parts=location.pathname.split('/').filter(Boolean);
+		var repo=parts[0]||'';
+		var pretty='/' + (repo?repo+'/':'') + encodeURIComponent(id);
+		if(location.pathname!==pretty) {
+			history.replaceState(null,'',pretty);
+		}
+	}
 	const EUR_TO_HUF = 390
 	const FALLBACK_LAT = 47.8712
 	const FALLBACK_LNG = 17.2719
@@ -788,15 +796,16 @@
 			els.title.innerHTML = 'Nincs ilyen azonosító';
 			return
 		}
-		const raw = await fetchListings();
-		const list = raw.map(normalize);
-		const found = list.find(x => String(x.id) === String(id));
+		const raw=await fetchListings();
+		const list=raw.map(normalize);
+		const found=list.find(x=>String(x.id)===String(id));
 		if(!found) {
-			els.title.innerHTML = 'Ingatlan nem található';
+			els.title.innerHTML='Ingatlan nem található';
 			return
 		}
-		state.listing = found;
-		renderListing()
+		state.listing=found;
+		ensurePrettyUrl(id);
+		await renderListing();
 	}
 	init()
 	</script>
