@@ -570,6 +570,10 @@
 					<button class="close" id="closeModalRight">Bezárás</button>
 				</div>
 				<div class="form-grid">
+					<div class="col-3">
+						<label for="mId">Azonosító</label>
+						<input id="mId" type="text" readonly>
+					</div>
 					<div class="col-6">
 						<label for="mTitle">Főcím</label>
 						<input id="mTitle" type="text">
@@ -790,6 +794,7 @@ setStatus('Publikálás indítása nem sikerült. Indítsa kézzel az Actions-be
 	const mCity = document.getElementById('mCity')
 	const mState = document.getElementById('mState')
 	const mDesc = document.getElementById('mDesc')
+	const mId = document.getElementById('mId')
 	const mSave = document.getElementById('mSave')
 	const mCancel = document.getElementById('mCancel')
 	const mDelete = document.getElementById('mDelete')
@@ -917,7 +922,7 @@ setStatus('Publikálás indítása nem sikerült. Indítsa kézzel az Actions-be
 		const type = filterType.value;
 		let arr = [...listings];
 		if(term) {
-			arr = arr.filter(it => (it.title + ' ' + it.city + ' ' + it.state).toLowerCase().includes(term))
+			arr = arr.filter(it => (it.title + ' ' + it.city + ' ' + it.state + ' ' + (it.id || '')).toLowerCase().includes(term))
 		}
 		if(type) {
 			arr = arr.filter(it => it.propertyType === type)
@@ -984,6 +989,10 @@ setStatus('Publikálás indítása nem sikerült. Indítsa kézzel az Actions-be
 			body.appendChild(title);
 			body.appendChild(addr);
 			body.appendChild(specs);
+			const idLine = document.createElement('div');
+			idLine.className = 'small';
+			idLine.textContent = 'ID: ' + (item.id || '');
+			body.appendChild(idLine);
 			card.appendChild(media);
 			card.appendChild(body);
 			card.addEventListener('click', () => openEditor(item.id));
@@ -1007,6 +1016,7 @@ setStatus('Publikálás indítása nem sikerült. Indítsa kézzel az Actions-be
 		mCity.value = it.city || '';
 		mState.value = it.state || '';
 		mDesc.value = it.description || '';
+		mId.value = it.id || '';
 		mMeta.textContent = 'Létrehozva: ' + new Date(it.createdAt).toLocaleString() + (it.updatedAt ? ' • Módosítva: ' + new Date(it.updatedAt).toLocaleString() : '');
 		renderEditPhotos();
 		mStatus.textContent = '';
@@ -1202,6 +1212,7 @@ setStatus('Publikálás indítása nem sikerült. Indítsa kézzel az Actions-be
 </body>
 
 </html>
+
 
 
 
