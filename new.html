@@ -548,6 +548,24 @@
 		}
 		return Date.now().toString(36) + Math.random().toString(36).slice(2)
 	}
+	function random10Digits() {
+if (window.crypto && crypto.getRandomValues) {
+const arr = new Uint8Array(10);
+crypto.getRandomValues(arr);
+let s = '';
+for (let i = 0; i < 10; i++) s += String(arr[i] % 10);
+return s;
+}
+let s = '';
+for (let i = 0; i < 10; i++) s += Math.floor(Math.random() * 10);
+return s;
+}
+function generateUniqueNumericId(existingIds) {
+const set = new Set((existingIds || []).map(String));
+let id = random10Digits();
+while (set.has(id)) id = random10Digits();
+return id;
+}
 
 	function val(id) {
 		return document.getElementById(id).value.trim()
@@ -710,7 +728,7 @@
 			setStatus('Mentés folyamatban...')
 			const list = await fetchListings()
 			const item = {
-				id: uid(),
+				id: generateUniqueNumericId(list.map(x => x.id).filter(Boolean)),
 				title,
 				price: priceEUR,
 				priceEUR,
@@ -762,6 +780,7 @@
 </body>
 
 </html>
+
 
 
 
